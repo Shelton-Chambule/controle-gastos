@@ -16,12 +16,14 @@ public class Launch {
     private Long id;
     private String description;
     private BigDecimal value;
+
     @Enumerated(EnumType.STRING)
     private LaunchType launchType;
     private LocalDate transactionDate;
+
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
-    private LocalDateTime creationDate;
+    private LocalDate creationDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -31,6 +33,17 @@ public class Launch {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    public Launch(){}
+
+    public Launch(Long id, String description, BigDecimal value, LaunchType launchType, LocalDate transactionDate, PaymentMethod paymentMethod, LocalDate creationDate) {
+        this.id = id;
+        this.description = description;
+        this.value = value;
+        this.launchType = launchType;
+        this.transactionDate = transactionDate;
+        this.paymentMethod = paymentMethod;
+        this.creationDate = creationDate;
+    }
 
     public Long getId() {
         return id;
@@ -80,11 +93,11 @@ public class Launch {
         this.paymentMethod = paymentMethod;
     }
 
-    public LocalDateTime getCreationDate() {
+    public LocalDate getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -102,6 +115,11 @@ public class Launch {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    @PrePersist
+    public void creationDate(){
+        this.creationDate = LocalDate.now();
     }
 
     @Override

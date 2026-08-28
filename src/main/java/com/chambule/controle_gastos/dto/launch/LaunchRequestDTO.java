@@ -1,4 +1,5 @@
 package com.chambule.controle_gastos.dto.launch;
+import com.chambule.controle_gastos.entities.Category;
 import com.chambule.controle_gastos.entities.Launch;
 import com.chambule.controle_gastos.entities.enums.LaunchType;
 import com.chambule.controle_gastos.entities.enums.PaymentMethod;
@@ -29,7 +30,10 @@ public class LaunchRequestDTO {
     private PaymentMethod paymentMethod;
 
     @NotNull(message = "Campo obrigatório")
-    private Long idCategory;
+    private Long categoryId;
+
+    @NotNull(message = "Campo obrigatório")
+    private Long userId;
 
     public LaunchRequestDTO(){}
 
@@ -39,7 +43,8 @@ public class LaunchRequestDTO {
         this.type = launch.getLaunchType();
         this.transactionDate = launch.getTransactionDate();
         this.paymentMethod = launch.getPaymentMethod();
-        this.idCategory = launch.getCategory().getIdCategory();
+        this.categoryId  = launch.getCategory().getCategoryId();
+        this.userId = launch.getId();
     }
 
     public String getDescription() {
@@ -82,11 +87,19 @@ public class LaunchRequestDTO {
         this.paymentMethod = paymentMethod;
     }
 
-    public Long getIdCategory() {
-        return idCategory;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setIdCategory(Long idCategory) {
-        this.idCategory = idCategory;
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 }

@@ -3,6 +3,7 @@ import com.chambule.controle_gastos.entities.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+
 public class UserRequestDTO {
 
     // Dados enviados pelo usuário

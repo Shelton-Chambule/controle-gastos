@@ -17,6 +17,17 @@ public class User {
     private  String password;
     private LocalDate creationDate;
 
+
+    public User(){}
+
+    public User(Long id, String name, String email, String password, LocalDate creationDate) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.creationDate = creationDate;
+    }
+
     // Estrutura de dados set para não poder duplicar category
     @OneToMany(mappedBy = "user")
     private Set<Category> categories = new HashSet<>();
@@ -73,6 +84,10 @@ public class User {
         return launches;
     }
 
+    @PrePersist
+    private void creationDate(){
+        this.creationDate = LocalDate.now();
+    }
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

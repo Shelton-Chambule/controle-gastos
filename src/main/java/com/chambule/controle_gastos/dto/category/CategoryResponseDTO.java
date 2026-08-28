@@ -11,18 +11,18 @@ public class CategoryResponseDTO {
     public CategoryResponseDTO(){}
 
     public CategoryResponseDTO(Category category) {
-        this.categoryId = category.getIdCategory();
+        this.categoryId = category.getCategoryId();
         this.nameCategory = category.getNameCategory() ;
         this.type = category.getType();
         this.userId = category.getUser().getId();
     }
 
-    public Long getIdCategory() {
+    public Long getCategoryId() {
         return categoryId;
     }
 
-    public void setIdCategory(Long idCategory) {
-        this.categoryId = idCategory;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getNameCategory() {

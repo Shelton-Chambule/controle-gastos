@@ -14,10 +14,9 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
     private String nameCategory;
-
     @Enumerated(EnumType.STRING)
     private CategoryType type;   // despesa ou receita;// id do propretario que criou a categoria
-    private LocalDate creation_date;
+    private LocalDate creationDate;
 
     @ManyToOne
     @JoinColumn(name = "id_user")
@@ -26,13 +25,21 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private Set<Launch> launches = new HashSet<>();
 
+    public Category(){}
 
-    public Long getIdCategory() {
+    public Category(Long categoryId, String nameCategory, CategoryType type, LocalDate creationDate) {
+        this.categoryId = categoryId;
+        this.nameCategory = nameCategory;
+        this.type = type;
+        this.creationDate = creationDate;
+    }
+
+    public Long getCategoryId() {
         return categoryId;
     }
 
-    public void setIdCategory(Long idCategory) {
-        this.categoryId = idCategory;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getNameCategory() {
@@ -51,12 +58,12 @@ public class Category {
         this.type = type;
     }
 
-    public LocalDate getCreation_date() {
-        return creation_date;
+    public LocalDate getCreationDate() {
+        return creationDate;
     }
 
-    public void setCreation_date(LocalDate creation_date) {
-        this.creation_date = creation_date;
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
     }
 
     public User getUser() {

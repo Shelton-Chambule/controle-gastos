@@ -7,7 +7,7 @@ public class UserResponseDTO {
     private Long userId;
     private String name;
     private String email;
-    private LocalDate creation_date;
+    private LocalDate creationDate;
 
     public UserResponseDTO(){}
 
@@ -15,7 +15,7 @@ public class UserResponseDTO {
         this.userId = user.getId();
         this.name = user.getName();
         this.email = user.getEmail();
-        this.creation_date = user.getCreation_date();
+        this.creationDate = user.getCreationDate();
     }
 
     public Long getUserId() {
@@ -42,11 +42,11 @@ public class UserResponseDTO {
         this.email = email;
     }
 
-    public LocalDate getCreation_date() {
-        return creation_date;
+    public LocalDate getCreationDate() {
+        return creationDate;
     }
 
-    public void setCreation_date(LocalDate creation_date) {
-        this.creation_date = creation_date;
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
     }
 }

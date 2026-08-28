@@ -13,8 +13,8 @@ public class LaunchResponseDTO {
     private LaunchType type;
     private LocalDate transactionDate;
     private PaymentMethod paymentMethod;
-    private Long idUser;
-    private Long idCategory;
+    private Long categoryId;
+    private Long userId;
 
     public LaunchResponseDTO(){}
 
@@ -25,8 +25,8 @@ public class LaunchResponseDTO {
         this.type = launch.getLaunchType();
         this.transactionDate = launch.getTransactionDate();
         this.paymentMethod = launch.getPaymentMethod();
-        this.idUser = launch.getUser().getId();
-        this.idCategory = launch.getCategory().getIdCategory();
+        this.categoryId = launch.getCategory().getCategoryId();
+        this.userId = launch.getUser().getId();
     }
 
     public Long getId() {
@@ -77,19 +77,19 @@ public class LaunchResponseDTO {
         this.paymentMethod = paymentMethod;
     }
 
-    public Long getIdUser() {
-        return idUser;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setIdUser(Long idUser) {
-        this.idUser = idUser;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public Long getIdCategory() {
-        return idCategory;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setIdCategory(Long idCategory) {
-        this.idCategory = idCategory;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }
