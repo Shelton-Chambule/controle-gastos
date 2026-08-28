@@ -4,7 +4,6 @@ import com.chambule.controle_gastos.entities.enums.PaymentMethod;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -22,7 +21,7 @@ public class Launch {
     private LocalDate transactionDate;
 
     @Enumerated(EnumType.STRING)
-    private PaymentMethod paymentMethod;
+    private Integer paymentMethod;
     private LocalDate creationDate;
 
     @ManyToOne
@@ -41,7 +40,7 @@ public class Launch {
         this.value = value;
         this.launchType = launchType;
         this.transactionDate = transactionDate;
-        this.paymentMethod = paymentMethod;
+       setPaymentMethod(paymentMethod);
         this.creationDate = creationDate;
     }
 
@@ -85,12 +84,13 @@ public class Launch {
         this.launchType = launchType;
     }
 
+
     public PaymentMethod getPaymentMethod() {
-        return paymentMethod;
+        return PaymentMethod.paymentMethod(paymentMethod);
     }
 
     public void setPaymentMethod(PaymentMethod paymentMethod) {
-        this.paymentMethod = paymentMethod;
+        this.paymentMethod = paymentMethod.getCode();
     }
 
     public LocalDate getCreationDate() {

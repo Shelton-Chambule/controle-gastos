@@ -36,6 +36,13 @@ public class UserService {
         return new UserResponseDTO(user);
     }
 
+    public void delete(Long id){
+        if(!userRepository.existsById(id)){
+            throw new ResourceNotFound(id);
+        }
+            userRepository.deleteById(id);
+    }
+
     public UserResponseDTO update(Long id, UserRequestDTO userRequestDTO) {
         try {
             User user = userRepository.getReferenceById(id);

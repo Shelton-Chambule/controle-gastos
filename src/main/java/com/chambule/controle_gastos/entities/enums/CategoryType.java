@@ -1,8 +1,26 @@
 package com.chambule.controle_gastos.entities.enums;
 public enum CategoryType {
 
-    INCOME,  // receita
-    EXPENSE,  // despesa
-    BOTH // receita/ despesa
+    INCOME(1),
+    EXPENSE(2),
+    BOTH(3);
 
+    private int code;
+
+    CategoryType(int code) {
+        this.code = code;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public static CategoryType category(int code){
+        for(CategoryType categoryType: CategoryType.values()){
+            if(categoryType.getCode() ==  code){
+                return categoryType;
+            }
+        }
+        throw new IllegalArgumentException("invalid code");
+    }
 }

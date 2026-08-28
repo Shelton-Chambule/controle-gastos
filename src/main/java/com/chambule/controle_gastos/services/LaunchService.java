@@ -48,25 +48,7 @@ public class LaunchService {
 
         launch.setDescription(launchRequestDTO.getDescription());
         launch.setValue(validValue(launchRequestDTO.getValue()));
-        launch.setLaunchType(LaunchType.INCOME);   // receita
-        launch.setTransactionDate(launchRequestDTO.getTransactionDate());
-        launch.setCreationDate(LocalDate.now());
-        launch.setPaymentMethod(launchRequestDTO.getPaymentMethod());
-        launch.setCategory(category);
-        launch.setUser(user);
-        launchRepository.save(launch);
-        return new LaunchResponseDTO(launch);
-    }
-
-    public LaunchResponseDTO saveExpense(LaunchRequestDTO launchRequestDTO) {
-        Launch launch = new Launch();
-
-        Category category = launchRepository.getReferenceById(launchRequestDTO.getCategoryId()).getCategory();
-        User user = launchRepository.getReferenceById(launchRequestDTO.getUserId()).getUser();
-
-        launch.setDescription(launchRequestDTO.getDescription());
-        launch.setValue(launchRequestDTO.getValue());
-        launch.setLaunchType(LaunchType.EXPENSE);   // receita
+        launch.setLaunchType(launchRequestDTO.getType());   // receita
         launch.setTransactionDate(launchRequestDTO.getTransactionDate());
         launch.setCreationDate(LocalDate.now());
         launch.setPaymentMethod(launchRequestDTO.getPaymentMethod());
@@ -112,10 +94,10 @@ public class LaunchService {
        }
     }
 
-    public LaunchResponseDTO updateIncome(Long id, LaunchRequestDTO launchRequestDTO) {
+    public LaunchResponseDTO update(Long id, LaunchRequestDTO launchRequestDTO) {
         try {
             Launch launch = launchRepository.getReferenceById(id);
-            updateIncome(launch, launchRequestDTO);
+            update(launch, launchRequestDTO);
             launchRepository.save(launch);
             return new LaunchResponseDTO(launch);
         } catch (EntityNotFoundException e) {
@@ -123,25 +105,7 @@ public class LaunchService {
         }
     }
 
-    private void updateIncome(Launch launch, LaunchRequestDTO launchRequestDTO) {
-        launch.setDescription(launchRequestDTO.getDescription());
-        launch.setValue(launchRequestDTO.getValue());
-        launch.setLaunchType(LaunchType.INCOME);
-        launch.setTransactionDate(launchRequestDTO.getTransactionDate());
-    }
-
-    public LaunchResponseDTO updateExpense(Long id, LaunchRequestDTO launchRequestDTO) {
-        try {
-            Launch launch = launchRepository.getReferenceById(id);
-            updateExpense(launch, launchRequestDTO);
-            launchRepository.save(launch);
-            return new LaunchResponseDTO(launch);
-        } catch (EntityNotFoundException e) {
-            throw new ResourceNotFound(id);
-        }
-    }
-
-    private void updateExpense(Launch launch, LaunchRequestDTO launchRequestDTO) {
+    private void update(Launch launch, LaunchRequestDTO launchRequestDTO) {
         launch.setDescription(launchRequestDTO.getDescription());
         launch.setValue(launchRequestDTO.getValue());
         launch.setLaunchType(LaunchType.EXPENSE);
