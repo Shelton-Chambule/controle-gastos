@@ -10,13 +10,18 @@ public class CategoryRequestDTO {
     private String nameCategory;
 
     @NotNull(message = "Campo obrigatório")
-    private CategoryType type;// despesa ou receita;
+    private Integer type;  // despesa ou receita;
+
+    @NotNull(message = "Campo obrigatório")
+    private Long userId;
 
     public CategoryRequestDTO(){}
 
     public CategoryRequestDTO(Category category) {
         this.nameCategory = category.getNameCategory();
-        this.type = category.getType();
+        setType(category.getType());
+        //this.type = category.getType();
+        this.userId = category.getUser().getId();
     }
 
     public String getNameCategory() {
@@ -28,11 +33,19 @@ public class CategoryRequestDTO {
     }
 
     public CategoryType getType() {
-        return type;
+        return CategoryType.category(type);
     }
 
     public void setType(CategoryType type) {
-        this.type = type;
+        this.type = type.getCode();
     }
 
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 }

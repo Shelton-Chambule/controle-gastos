@@ -20,7 +20,7 @@ public class Handler {
         return ResponseEntity.status(status).body(standardError);
     }
 
-    @ExceptionHandler(ResourceNotFound.class)
+    @ExceptionHandler(DuplicateEmail.class)
     public ResponseEntity<StandardError> DuplicateEmail(DuplicateEmail email, HttpServletRequest request){
         String error = "Esse email ja se encontra cadastrado";
         HttpStatus status = HttpStatus.CONFLICT;
@@ -28,7 +28,7 @@ public class Handler {
         return ResponseEntity.status(status).body(standardError);
     }
 
-    @ExceptionHandler(ResourceNotFound.class)
+    @ExceptionHandler(DataBase.class)
     public ResponseEntity<StandardError> DataBase(DataBase email, HttpServletRequest request){
         String error = "This release is associated with a category";
         HttpStatus status = HttpStatus.BAD_REQUEST;

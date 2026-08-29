@@ -24,7 +24,7 @@ public class UserController {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/user/salvar")
+                        .requestMatchers(HttpMethod.POST, "/api/user/save")
                         .permitAll()
                         .anyRequest()
                         .authenticated()

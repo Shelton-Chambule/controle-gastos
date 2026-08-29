@@ -14,8 +14,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
     private String nameCategory;
-    @Enumerated(EnumType.STRING)
-    private CategoryType type;   // despesa ou receita;// id do propretario que criou a categoria
+    private Integer type;   // despesa ou receita;// id do propretario que criou a categoria
     private LocalDate creationDate;
 
     @ManyToOne
@@ -30,7 +29,7 @@ public class Category {
     public Category(Long categoryId, String nameCategory, CategoryType type, LocalDate creationDate) {
         this.categoryId = categoryId;
         this.nameCategory = nameCategory;
-        this.type = type;
+        setType(type);
         this.creationDate = creationDate;
     }
 
@@ -51,11 +50,11 @@ public class Category {
     }
 
     public CategoryType getType() {
-        return type;
+        return CategoryType.category(type);
     }
 
     public void setType(CategoryType type) {
-        this.type = type;
+        this.type = type.getCode();
     }
 
     public LocalDate getCreationDate() {

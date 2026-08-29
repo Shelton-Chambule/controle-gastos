@@ -19,8 +19,6 @@ public class Launch {
     @Enumerated(EnumType.STRING)
     private LaunchType launchType;
     private LocalDate transactionDate;
-
-    @Enumerated(EnumType.STRING)
     private Integer paymentMethod;
     private LocalDate creationDate;
 
@@ -83,7 +81,6 @@ public class Launch {
     public void setLaunchType(LaunchType launchType) {
         this.launchType = launchType;
     }
-
 
     public PaymentMethod getPaymentMethod() {
         return PaymentMethod.paymentMethod(paymentMethod);
