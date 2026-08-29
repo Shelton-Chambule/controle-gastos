@@ -10,7 +10,6 @@ import com.chambule.controle_gastos.repository.LaunchRepository;
 import com.chambule.controle_gastos.repository.UserRepository;
 import com.chambule.controle_gastos.services.exception.DataBase;
 import com.chambule.controle_gastos.services.exception.ResourceNotFound;
-import com.chambule.controle_gastos.services.exception.ValueInvalid;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
@@ -35,12 +34,12 @@ public class LaunchService {
 
     public BigDecimal validValue(BigDecimal value){
         if(value.compareTo(BigDecimal.ZERO)  <= 0){
-            throw new ValueInvalid("Value invalid, the value must be greater than zero");
+            throw new IllegalArgumentException("Value invalid, the value must be greater than zero");
         }
         return value;
     }
 
-    public LaunchResponseDTO saveIncome(LaunchRequestDTO launchRequestDTO) {
+    public LaunchResponseDTO createLaunch(LaunchRequestDTO launchRequestDTO) {
         Launch launch = new Launch();
 
         Category category = launchRepository.getReferenceById(launchRequestDTO.getCategoryId()).getCategory();
