@@ -12,10 +12,11 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryId;
+    private Long Id;
     private String nameCategory;
-    private Integer type;   // despesa ou receita;// id do propretario que criou a categoria
+    private Integer type;   // despesa ou receita  // id do propretario que criou a categoria
     private LocalDate creationDate;
+    private LocalDate updateDate;
 
     @ManyToOne
     @JoinColumn(name = "id_user")
@@ -26,19 +27,27 @@ public class Category {
 
     public Category(){}
 
-    public Category(Long categoryId, String nameCategory, CategoryType type, LocalDate creationDate) {
-        this.categoryId = categoryId;
+    public Category(Long Id, String nameCategory, CategoryType type, LocalDate creationDate, LocalDate updateDate) {
+        this.Id = Id;
         this.nameCategory = nameCategory;
         setType(type);
         this.creationDate = creationDate;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
+    public LocalDate getUpdateDate() {
+        return updateDate;
     }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
+    public void setUpdateDate(LocalDate updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long Id) {
+        this.Id = Id;
     }
 
     public String getNameCategory() {
@@ -77,15 +86,26 @@ public class Category {
         return launches;
     }
 
+    @PrePersist
+    public void creationDate(){
+        this.creationDate = LocalDate.now();
+    }
+
+    @PreUpdate
+    public  void updateDate(){
+        this.updateDate = LocalDate.now();
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return Objects.equals(categoryId, category.categoryId);
+        return Objects.equals(Id, category.Id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(categoryId);
+        return Objects.hashCode(Id);
     }
 }

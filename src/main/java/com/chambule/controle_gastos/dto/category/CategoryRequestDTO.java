@@ -20,7 +20,6 @@ public class CategoryRequestDTO {
     public CategoryRequestDTO(Category category) {
         this.nameCategory = category.getNameCategory();
         setType(category.getType());
-        //this.type = category.getType();
         this.userId = category.getUser().getId();
     }
 

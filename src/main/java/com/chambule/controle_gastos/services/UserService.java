@@ -6,19 +6,22 @@ import com.chambule.controle_gastos.repository.UserRepository;
 import com.chambule.controle_gastos.services.exception.DuplicateEmail;
 import com.chambule.controle_gastos.services.exception.ResourceNotFound;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder encoder;
+   // private final PasswordEncoder encoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder encoder) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.encoder = encoder;
+       // this.encoder = encoder;
     }
 
     public UserResponseDTO save(UserRequestDTO userRequestDTO) {
@@ -30,7 +33,7 @@ public class UserService {
         }
         user.setName(userRequestDTO.getName());
         user.setEmail(userRequestDTO.getEmail());
-        user.setPassword(encoder.encode(userRequestDTO.getPassword()));
+        user.setPassword(userRequestDTO.getPassword());
         user.setCreationDate(LocalDate.now());
         userRepository.save(user);
         return new UserResponseDTO(user);
@@ -57,6 +60,16 @@ public class UserService {
     private void updateData(User user, UserRequestDTO userRequestDTO) {
             user.setName(userRequestDTO.getName());
             user.setEmail(userRequestDTO.getEmail());
-            user.setPassword(encoder.encode(userRequestDTO.getPassword()));
+            user.setPassword(userRequestDTO.getPassword());
+    }
+
+    public List<UserResponseDTO> findAll(){
+        List<User> users = userRepository.findAll();
+        return users.stream().map(UserResponseDTO::new).collect(Collectors.toList());
+    }
+
+    public UserResponseDTO findById(Long id){
+        Optional<User> user = userRepository.findById(id);
+        return new UserResponseDTO(user.orElseThrow(() -> new ResourceNotFound(id)));
     }
 }

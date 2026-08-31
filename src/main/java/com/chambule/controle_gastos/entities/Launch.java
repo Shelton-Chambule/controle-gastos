@@ -15,9 +15,7 @@ public class Launch {
     private Long id;
     private String description;
     private BigDecimal value;
-
-    @Enumerated(EnumType.STRING)
-    private LaunchType launchType;
+    private Integer launchType;
     private LocalDate transactionDate;
     private Integer paymentMethod;
     private LocalDate creationDate;
@@ -36,7 +34,7 @@ public class Launch {
         this.id = id;
         this.description = description;
         this.value = value;
-        this.launchType = launchType;
+        setLaunchType( launchType);
         this.transactionDate = transactionDate;
        setPaymentMethod(paymentMethod);
         this.creationDate = creationDate;
@@ -75,11 +73,11 @@ public class Launch {
     }
 
     public LaunchType getLaunchType() {
-        return launchType;
+        return LaunchType.launch(launchType);
     }
 
     public void setLaunchType(LaunchType launchType) {
-        this.launchType = launchType;
+        this.launchType = launchType.getCode();
     }
 
     public PaymentMethod getPaymentMethod() {

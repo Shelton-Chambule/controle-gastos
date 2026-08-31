@@ -1,5 +1,4 @@
 package com.chambule.controle_gastos.dto.launch;
-import com.chambule.controle_gastos.entities.Category;
 import com.chambule.controle_gastos.entities.Launch;
 import com.chambule.controle_gastos.entities.enums.LaunchType;
 import com.chambule.controle_gastos.entities.enums.PaymentMethod;
@@ -9,7 +8,6 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
 public class LaunchRequestDTO {
 
     @NotBlank(message = "Campo obrigatório")
@@ -21,7 +19,7 @@ public class LaunchRequestDTO {
     private BigDecimal value;
 
     @NotNull(message = "Campo obrigatório")
-    private LaunchType type;
+    private Integer type;
 
     @NotNull(message = "Campo obrigatório")
     private LocalDate transactionDate;
@@ -40,10 +38,10 @@ public class LaunchRequestDTO {
     public LaunchRequestDTO(Launch launch) {
         this.description = launch.getDescription();
         this.value = launch.getValue();
-        this.type = launch.getLaunchType();
+        setType(launch.getLaunchType());
         this.transactionDate = launch.getTransactionDate();
         this.paymentMethod = launch.getPaymentMethod();
-        this.categoryId  = launch.getCategory().getCategoryId();
+        this.categoryId  = launch.getCategory().getId();
         this.userId = launch.getId();
     }
 
@@ -72,11 +70,11 @@ public class LaunchRequestDTO {
     }
 
     public LaunchType getType() {
-        return type;
+        return LaunchType.launch(type);
     }
 
     public void setType(LaunchType type) {
-        this.type = type;
+        this.type = type.getCode();
     }
 
     public PaymentMethod getPaymentMethod() {

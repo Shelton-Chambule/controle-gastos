@@ -11,7 +11,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long Id;
     private String name;
     private String email;
     private  String password;
@@ -20,15 +20,14 @@ public class User {
 
     public User(){}
 
-    public User(Long id, String name, String email, String password, LocalDate creationDate) {
-        this.id = id;
+    public User(Long Id, String name, String email, String password, LocalDate creationDate) {
+        this.Id = Id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.creationDate = creationDate;
     }
 
-    // Estrutura de dados set para não poder duplicar category
     @OneToMany(mappedBy = "user")
     private Set<Category> categories = new HashSet<>();
 
@@ -37,11 +36,11 @@ public class User {
 
 
     public Long getId() {
-        return id;
+        return Id;
     }
 
     public void setId(Long id) {
-        this.id = id;
+        Id = id;
     }
 
     public String getName() {
@@ -88,15 +87,16 @@ public class User {
     private void creationDate(){
         this.creationDate = LocalDate.now();
     }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id);
+        return Objects.equals(Id, user.Id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(Id);
     }
 }

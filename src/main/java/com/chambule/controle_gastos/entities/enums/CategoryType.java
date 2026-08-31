@@ -2,10 +2,9 @@ package com.chambule.controle_gastos.entities.enums;
 public enum CategoryType {
 
     INCOME(1),
-    EXPENSE(2),
-    BOTH(3);
+    EXPENSE(2);
 
-    private int code;
+    private Integer code;
 
     CategoryType(int code) {
         this.code = code;

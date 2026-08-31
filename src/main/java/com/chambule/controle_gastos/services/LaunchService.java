@@ -1,4 +1,5 @@
 package com.chambule.controle_gastos.services;
+import com.chambule.controle_gastos.dto.launch.BalanceResponseDTO;
 import com.chambule.controle_gastos.dto.launch.LaunchRequestDTO;
 import com.chambule.controle_gastos.dto.launch.LaunchResponseDTO;
 import com.chambule.controle_gastos.entities.Category;
@@ -15,8 +16,7 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,22 +32,35 @@ public class LaunchService {
         this.categoryRepository = categoryRepository;
     }
 
-    public BigDecimal validValue(BigDecimal value){
-        if(value.compareTo(BigDecimal.ZERO)  <= 0){
+    public BigDecimal validaValue(BigDecimal value) {
+        if (value.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Value invalid, the value must be greater than zero");
         }
         return value;
     }
 
+    public BalanceResponseDTO findByUser_Id(Long userId) {
+
+        List<Launch> launches = launchRepository.findByUser_Id(userId);
+
+        BigDecimal totalIncome = launches.stream().filter(launch -> launch.getLaunchType() == LaunchType.INCOME).map(Launch::getValue).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal totalExpense = launches.stream().filter(launch -> launch.getLaunchType() == LaunchType.EXPENSE).map(Launch::getValue).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+         BigDecimal balance = totalIncome.subtract(totalExpense);
+
+        return new BalanceResponseDTO(totalIncome,totalExpense,balance);
+    }
+
     public LaunchResponseDTO createLaunch(LaunchRequestDTO launchRequestDTO) {
         Launch launch = new Launch();
 
-        Category category = launchRepository.getReferenceById(launchRequestDTO.getCategoryId()).getCategory();
-        User user = launchRepository.getReferenceById(launchRequestDTO.getUserId()).getUser();
+        Category category = categoryRepository.getReferenceById(launchRequestDTO.getCategoryId());
+        User user = userRepository.getReferenceById(launchRequestDTO.getUserId());
 
         launch.setDescription(launchRequestDTO.getDescription());
-        launch.setValue(validValue(launchRequestDTO.getValue()));
-        launch.setLaunchType(launchRequestDTO.getType());   // receita
+        launch.setValue(validaValue(launchRequestDTO.getValue()));
+        launch.setLaunchType(launchRequestDTO.getType());   // receita ou despesa
         launch.setTransactionDate(launchRequestDTO.getTransactionDate());
         launch.setCreationDate(LocalDate.now());
         launch.setPaymentMethod(launchRequestDTO.getPaymentMethod());
@@ -57,7 +70,7 @@ public class LaunchService {
         return new LaunchResponseDTO(launch);
     }
 
-    public List<LaunchResponseDTO> findAll() {
+    public List<LaunchResponseDTO> findAll(){
         List<Launch> launch = launchRepository.findAll();
         return launch.stream().map(LaunchResponseDTO::new).collect(Collectors.toList());
     }
@@ -68,29 +81,29 @@ public class LaunchService {
     }
 
     // buscar lançamentos por categoria
-    public List<LaunchResponseDTO> findByCategory(Long userId, Long categoryId) {
-        if(!userRepository.existsById(userId)){
+    public List<LaunchResponseDTO> findByUserIdAndCategoryId(Long userId, Long categoryId) {
+        if (!userRepository.existsById(userId)) {
             throw new ResourceNotFound(userId);
         }
 
-        if(!categoryRepository.existsById(categoryId)){
+        if (!categoryRepository.existsById(categoryId)){
             throw new ResourceNotFound(categoryId);
         }
 
-         List<Launch> launches =  launchRepository.findByCategory(userId, categoryId);
+        List<Launch> launches = launchRepository.findByUserIdAndCategoryId(userId, categoryId);
         return launches.stream().map(LaunchResponseDTO::new).collect(Collectors.toList());
     }
 
-    public void  deleteById(Long id) {
+    public void deleteById(Long id) {
         if (!launchRepository.existsById(id)) {
             throw new ResourceNotFound(id);
         }
 
-       try {
-           launchRepository.deleteById(id);
-       }catch (InvalidDataAccessApiUsageException e) {
-           throw new DataBase("This release is associated with a category");
-       }
+        try {
+            launchRepository.deleteById(id);
+        } catch (InvalidDataAccessApiUsageException e) {
+            throw new DataBase("This release is associated with a category");
+        }
     }
 
     public LaunchResponseDTO update(Long id, LaunchRequestDTO launchRequestDTO) {
@@ -107,7 +120,7 @@ public class LaunchService {
     private void update(Launch launch, LaunchRequestDTO launchRequestDTO) {
         launch.setDescription(launchRequestDTO.getDescription());
         launch.setValue(launchRequestDTO.getValue());
-        launch.setLaunchType(LaunchType.EXPENSE);
+        launch.setLaunchType(launchRequestDTO.getType());
         launch.setTransactionDate(launchRequestDTO.getTransactionDate());
     }
 }

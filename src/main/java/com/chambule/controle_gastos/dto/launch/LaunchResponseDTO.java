@@ -4,7 +4,6 @@ import com.chambule.controle_gastos.entities.enums.LaunchType;
 import com.chambule.controle_gastos.entities.enums.PaymentMethod;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
 public class LaunchResponseDTO {
 
     private Long id;
@@ -25,8 +24,9 @@ public class LaunchResponseDTO {
         this.type = launch.getLaunchType();
         this.transactionDate = launch.getTransactionDate();
         this.paymentMethod = launch.getPaymentMethod();
-        this.categoryId = launch.getCategory().getCategoryId();
+        this.categoryId = launch.getCategory().getId();
         this.userId = launch.getUser().getId();
+
     }
 
     public Long getId() {

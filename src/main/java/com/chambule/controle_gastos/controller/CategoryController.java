@@ -2,8 +2,14 @@ package com.chambule.controle_gastos.controller;
 import com.chambule.controle_gastos.dto.category.CategoryRequestDTO;
 import com.chambule.controle_gastos.dto.category.CategoryResponseDTO;
 import com.chambule.controle_gastos.services.CategoryService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+//import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -29,7 +35,7 @@ public class CategoryController {
         return ResponseEntity.ok().body(category);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<CategoryResponseDTO> findById(@PathVariable Long id){
         CategoryResponseDTO category = categoryService.findById(id);
         return ResponseEntity.ok().body(category);
@@ -41,6 +47,7 @@ public class CategoryController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/{id}")
     public ResponseEntity<CategoryResponseDTO> update(@PathVariable Long id, @RequestBody CategoryRequestDTO categoryRequestDTO){
         CategoryResponseDTO category = categoryService.update(id,categoryRequestDTO);
         return ResponseEntity.ok().body(category);
