@@ -6,13 +6,13 @@ import jakarta.validation.constraints.NotNull;
 
 public class CategoryRequestDTO {
 
-    @NotBlank(message = "Campo obrigatório")
+    @NotBlank(message = "Required field")
     private String nameCategory;
 
-    @NotNull(message = "Campo obrigatório")
+    @NotNull(message = "Required field")
     private Integer type;  // despesa ou receita;
 
-    @NotNull(message = "Campo obrigatório")
+    @NotNull(message = "Required field")
     private Long userId;
 
     public CategoryRequestDTO(){}

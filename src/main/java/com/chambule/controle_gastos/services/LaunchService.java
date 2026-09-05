@@ -32,7 +32,7 @@ public class LaunchService {
         this.categoryRepository = categoryRepository;
     }
 
-    public BigDecimal validaValue(BigDecimal value) {
+    public BigDecimal validateValue(BigDecimal value) {
         if (value.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Value invalid, the value must be greater than zero");
         }
@@ -42,9 +42,9 @@ public class LaunchService {
     public BalanceResponseDTO findByUser_Id(Long userId) {
 
         List<Launch> launches = launchRepository.findByUser_Id(userId);
-
+            // income -> receita
         BigDecimal totalIncome = launches.stream().filter(launch -> launch.getLaunchType() == LaunchType.INCOME).map(Launch::getValue).reduce(BigDecimal.ZERO, BigDecimal::add);
-
+            // expense -> despesa
         BigDecimal totalExpense = launches.stream().filter(launch -> launch.getLaunchType() == LaunchType.EXPENSE).map(Launch::getValue).reduce(BigDecimal.ZERO, BigDecimal::add);
 
          BigDecimal balance = totalIncome.subtract(totalExpense);
@@ -59,7 +59,7 @@ public class LaunchService {
         User user = userRepository.getReferenceById(launchRequestDTO.getUserId());
 
         launch.setDescription(launchRequestDTO.getDescription());
-        launch.setValue(validaValue(launchRequestDTO.getValue()));
+        launch.setValue(validateValue(launchRequestDTO.getValue()));
         launch.setLaunchType(launchRequestDTO.getType());   // receita ou despesa
         launch.setTransactionDate(launchRequestDTO.getTransactionDate());
         launch.setCreationDate(LocalDate.now());
@@ -121,6 +121,7 @@ public class LaunchService {
         launch.setDescription(launchRequestDTO.getDescription());
         launch.setValue(launchRequestDTO.getValue());
         launch.setLaunchType(launchRequestDTO.getType());
+        launch.setPaymentMethod(launchRequestDTO.getPaymentMethod());
         launch.setTransactionDate(launchRequestDTO.getTransactionDate());
     }
 }

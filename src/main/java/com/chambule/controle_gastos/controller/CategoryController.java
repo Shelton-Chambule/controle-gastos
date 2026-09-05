@@ -2,6 +2,7 @@ package com.chambule.controle_gastos.controller;
 import com.chambule.controle_gastos.dto.category.CategoryRequestDTO;
 import com.chambule.controle_gastos.dto.category.CategoryResponseDTO;
 import com.chambule.controle_gastos.services.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -24,7 +25,7 @@ public class CategoryController {
     }
 
     @PostMapping("/createCategory")
-    public ResponseEntity<CategoryResponseDTO> createCategory(@RequestBody CategoryRequestDTO categoryRequestDTO){
+    public ResponseEntity<CategoryResponseDTO> createCategory( @Valid  @RequestBody CategoryRequestDTO categoryRequestDTO){
         CategoryResponseDTO category = categoryService.createCategory(categoryRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(category);
     }
@@ -48,7 +49,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryResponseDTO> update(@PathVariable Long id, @RequestBody CategoryRequestDTO categoryRequestDTO){
+    public ResponseEntity<CategoryResponseDTO> update(@PathVariable Long id, @Valid @RequestBody CategoryRequestDTO categoryRequestDTO){
         CategoryResponseDTO category = categoryService.update(id,categoryRequestDTO);
         return ResponseEntity.ok().body(category);
     }

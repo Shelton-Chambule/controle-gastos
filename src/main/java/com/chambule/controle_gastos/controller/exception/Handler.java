@@ -5,6 +5,7 @@ import com.chambule.controle_gastos.services.exception.ResourceNotFound;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.time.Instant;
@@ -35,5 +36,13 @@ public class Handler {
         StandardError standardError = new StandardError(Instant.now(), status.value(), error, email.getMessage(),request.getRequestURI());
         return ResponseEntity.status(status).body(standardError);
     }
+    // MethodArgumentNotValidException
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<StandardError> Validation(MethodArgumentNotValidException validException, HttpServletRequest request){
+        String error = "Erro of validation";
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        StandardError standardError = new StandardError(Instant.now(), status.value(), error, validException.getMessage(),request.getRequestURI());
+        return ResponseEntity.status(status).body(standardError);
+    }
 }

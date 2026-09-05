@@ -3,6 +3,7 @@ import com.chambule.controle_gastos.dto.launch.BalanceResponseDTO;
 import com.chambule.controle_gastos.dto.launch.LaunchRequestDTO;
 import com.chambule.controle_gastos.dto.launch.LaunchResponseDTO;
 import com.chambule.controle_gastos.services.LaunchService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class LaunchController {
     }
 
     @PostMapping("/createLaunch")
-    public ResponseEntity<LaunchResponseDTO> createLaunch(@RequestBody LaunchRequestDTO launchRequestDTO){
+    public ResponseEntity<LaunchResponseDTO> createLaunch(@Valid  @RequestBody LaunchRequestDTO launchRequestDTO){
             LaunchResponseDTO launch = launchService.createLaunch(launchRequestDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(launch);
     }
@@ -43,7 +44,7 @@ public class LaunchController {
     }
 
     @PutMapping("/{id}/update")
-    public ResponseEntity<LaunchResponseDTO> update(@PathVariable Long id, @RequestBody LaunchRequestDTO launchRequestDTO ){
+    public ResponseEntity<LaunchResponseDTO> update(@PathVariable Long id, @Valid @RequestBody LaunchRequestDTO launchRequestDTO ){
         LaunchResponseDTO launch = launchService.update(id,launchRequestDTO);
         return  ResponseEntity.ok().body(launch);
     }

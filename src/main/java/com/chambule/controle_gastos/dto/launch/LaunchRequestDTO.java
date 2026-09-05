@@ -2,35 +2,34 @@ package com.chambule.controle_gastos.dto.launch;
 import com.chambule.controle_gastos.entities.Launch;
 import com.chambule.controle_gastos.entities.enums.LaunchType;
 import com.chambule.controle_gastos.entities.enums.PaymentMethod;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 public class LaunchRequestDTO {
 
-    @NotBlank(message = "Campo obrigatório")
-    @Size(min = 20, max = 50, message = "deve  ter  no máximo 50 caracteres")
+    @NotBlank(message = "Required field")
+    @Size(min = 20, max = 50, message = "must has in the  maxim 50  characters")
     private String description;
 
-    @NotNull(message = "Campo obrigatório")
+    @NotNull(message = "Required field")
     @Positive(message = "valor deve  ser  positivo")
     private BigDecimal value;
 
-    @NotNull(message = "Campo obrigatório")
+    @NotNull(message = "Required field")
     private Integer type;
 
-    @NotNull(message = "Campo obrigatório")
+    @NotNull(message = "Required field")
+    @PastOrPresent(message = "The date cannot be in the future")
     private LocalDate transactionDate;
 
-    @NotNull(message = "Campo obrigatório")
+    @NotNull(message = "Required field")
     private PaymentMethod paymentMethod;
 
-    @NotNull(message = "Campo obrigatório")
+    @NotNull(message = "Required field")
     private Long categoryId;
 
-    @NotNull(message = "Campo obrigatório")
+    @NotNull(message = "Required field")
     private Long userId;
 
     public LaunchRequestDTO(){}

@@ -17,7 +17,6 @@ public class User {
     private  String password;
     private LocalDate creationDate;
 
-
     public User(){}
 
     public User(Long Id, String name, String email, String password, LocalDate creationDate) {

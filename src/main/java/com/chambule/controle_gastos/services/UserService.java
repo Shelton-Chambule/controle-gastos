@@ -39,13 +39,6 @@ public class UserService {
         return new UserResponseDTO(user);
     }
 
-    public void delete(Long id){
-        if(!userRepository.existsById(id)){
-            throw new ResourceNotFound(id);
-        }
-            userRepository.deleteById(id);
-    }
-
     public UserResponseDTO update(Long id, UserRequestDTO userRequestDTO) {
         try {
             User user = userRepository.getReferenceById(id);
@@ -61,11 +54,6 @@ public class UserService {
             user.setName(userRequestDTO.getName());
             user.setEmail(userRequestDTO.getEmail());
             user.setPassword(userRequestDTO.getPassword());
-    }
-
-    public List<UserResponseDTO> findAll(){
-        List<User> users = userRepository.findAll();
-        return users.stream().map(UserResponseDTO::new).collect(Collectors.toList());
     }
 
     public UserResponseDTO findById(Long id){
