@@ -1,76 +1,91 @@
 package com.chambule.controle_gastos.services;
+
 import com.chambule.controle_gastos.dto.category.CategoryRequestDTO;
 import com.chambule.controle_gastos.dto.category.CategoryResponseDTO;
 import com.chambule.controle_gastos.entities.Category;
 import com.chambule.controle_gastos.entities.User;
-import com.chambule.controle_gastos.entities.enums.CategoryType;
 import com.chambule.controle_gastos.repository.CategoryRepository;
-import com.chambule.controle_gastos.repository.UserRepository;
 import com.chambule.controle_gastos.services.exception.DataBase;
 import com.chambule.controle_gastos.services.exception.ResourceNotFound;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import java.time.LocalDate;
+
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-    private final UserRepository userRepository;
+    private final CurrentUserService currentUserService;
 
-    public CategoryService(CategoryRepository categoryRepository, UserRepository userRepository) {
+    public CategoryService(
+            CategoryRepository categoryRepository,
+            CurrentUserService currentUserService
+    ) {
         this.categoryRepository = categoryRepository;
-        this.userRepository = userRepository;
+        this.currentUserService = currentUserService;
     }
 
     public CategoryResponseDTO createCategory(CategoryRequestDTO categoryRequestDTO) {
-        User userId = userRepository.getReferenceById(categoryRequestDTO.getUserId());
+        User user = currentUserService.get();
 
         Category category = new Category();
         category.setNameCategory(categoryRequestDTO.getNameCategory());
         category.setType(categoryRequestDTO.getType());
-        category.setCreationDate(LocalDate.now());
-        category.setUser(userId);
+        category.setUser(user);
+
         categoryRepository.save(category);
         return new CategoryResponseDTO(category);
     }
 
     public List<CategoryResponseDTO> findAll() {
-        List<Category> categories = categoryRepository.findAll();
-        return categories.stream().map(CategoryResponseDTO::new).collect(Collectors.toList());
+        User user = currentUserService.get();
+        List<Category> categories = isAdmin(user)
+                ? categoryRepository.findAll()
+                : categoryRepository.findByUser_Id(user.getId());
+
+        return categories.stream()
+                .map(CategoryResponseDTO::new)
+                .collect(Collectors.toList());
     }
 
     public CategoryResponseDTO findById(Long id) {
-        Optional<Category> category = categoryRepository.findById(id);
-        return new CategoryResponseDTO(category.orElseThrow(() -> new ResourceNotFound(id)));
+        Category category = findAccessibleCategory(id);
+        return new CategoryResponseDTO(category);
     }
 
     public CategoryResponseDTO update(Long id, CategoryRequestDTO categoryRequestDTO) {
-        Category category = categoryRepository.getReferenceById(id);
-        updateData(category, categoryRequestDTO);
+        Category category = findAccessibleCategory(id);
+        category.setNameCategory(categoryRequestDTO.getNameCategory());
+        category.setType(categoryRequestDTO.getType());
         categoryRepository.save(category);
         return new CategoryResponseDTO(category);
     }
 
-    private void updateData(Category category, CategoryRequestDTO categoryRequestDTO) {
-        category.setNameCategory(categoryRequestDTO.getNameCategory());
-        category.setType(categoryRequestDTO.getType());
-    }
-
     public void delete(Long id) {
+        Category category = findAccessibleCategory(id);
 
-        if (!categoryRepository.existsById(id)) {
-            throw new ResourceNotFound(id);
-        }
         try {
-            categoryRepository.deleteById(id);
-            // Resolver exceção
-        } catch (InvalidDataAccessApiUsageException e) {
-            throw new DataBase("This release is associated with a category");
+            categoryRepository.delete(category);
+        } catch (DataIntegrityViolationException exception) {
+            throw new DataBase("The category is associated with a launch");
         }
     }
 
+    private Category findAccessibleCategory(Long id) {
+        User user = currentUserService.get();
+
+        if (isAdmin(user)) {
+            return categoryRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFound(id));
+        }
+
+        return categoryRepository.findByIdAndUser_Id(id, user.getId())
+                .orElseThrow(() -> new ResourceNotFound(id));
+    }
+
+    private boolean isAdmin(User user) {
+        return user.getRole().name().equals("ADMIN");
+    }
 }

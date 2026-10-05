@@ -1,11 +1,9 @@
 package com.chambule.controle_gastos.dto.user;
 import com.chambule.controle_gastos.entities.User;
 import java.time.LocalDate;
-
 public class UserResponseDTO {
 
     private Long userId;
-    private String name;
     private String email;
     private LocalDate creationDate;
 
@@ -13,8 +11,7 @@ public class UserResponseDTO {
 
     public UserResponseDTO(User user) {
         this.userId = user.getId();
-        this.name = user.getName();
-        this.email = user.getEmail();
+        this.email = user.getLogin();
         this.creationDate = user.getCreationDate();
     }
 
@@ -24,14 +21,6 @@ public class UserResponseDTO {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getEmail() {

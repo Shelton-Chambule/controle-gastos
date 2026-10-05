@@ -1,23 +1,28 @@
 package com.chambule.controle_gastos.dto.launch;
-import com.chambule.controle_gastos.entities.Launch;
+
 import com.chambule.controle_gastos.entities.enums.LaunchType;
 import com.chambule.controle_gastos.entities.enums.PaymentMethod;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
 public class LaunchRequestDTO {
 
     @NotBlank(message = "Required field")
-    @Size(min = 20, max = 50, message = "must has in the  maxim 50  characters")
+    @Size(min = 3, max = 150, message = "Description must have between 3 and 150 characters")
     private String description;
 
     @NotNull(message = "Required field")
-    @Positive(message = "valor deve  ser  positivo")
+    @Positive(message = "Value must be positive")
     private BigDecimal value;
 
     @NotNull(message = "Required field")
-    private Integer type;
+    private LaunchType type;
 
     @NotNull(message = "Required field")
     @PastOrPresent(message = "The date cannot be in the future")
@@ -29,19 +34,7 @@ public class LaunchRequestDTO {
     @NotNull(message = "Required field")
     private Long categoryId;
 
-    @NotNull(message = "Required field")
-    private Long userId;
-
-    public LaunchRequestDTO(){}
-
-    public LaunchRequestDTO(Launch launch) {
-        this.description = launch.getDescription();
-        this.value = launch.getValue();
-        setType(launch.getLaunchType());
-        this.transactionDate = launch.getTransactionDate();
-        this.paymentMethod = launch.getPaymentMethod();
-        this.categoryId  = launch.getCategory().getId();
-        this.userId = launch.getId();
+    public LaunchRequestDTO() {
     }
 
     public String getDescription() {
@@ -60,20 +53,20 @@ public class LaunchRequestDTO {
         this.value = value;
     }
 
+    public LaunchType getType() {
+        return type;
+    }
+
+    public void setType(LaunchType type) {
+        this.type = type;
+    }
+
     public LocalDate getTransactionDate() {
         return transactionDate;
     }
 
     public void setTransactionDate(LocalDate transactionDate) {
         this.transactionDate = transactionDate;
-    }
-
-    public LaunchType getType() {
-        return LaunchType.launch(type);
-    }
-
-    public void setType(LaunchType type) {
-        this.type = type.getCode();
     }
 
     public PaymentMethod getPaymentMethod() {
@@ -86,14 +79,6 @@ public class LaunchRequestDTO {
 
     public Long getCategoryId() {
         return categoryId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public void setCategoryId(Long categoryId) {

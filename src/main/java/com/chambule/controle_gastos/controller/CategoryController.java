@@ -3,19 +3,13 @@ import com.chambule.controle_gastos.dto.category.CategoryRequestDTO;
 import com.chambule.controle_gastos.dto.category.CategoryResponseDTO;
 import com.chambule.controle_gastos.services.CategoryService;
 import jakarta.validation.Valid;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/category")
+@RequestMapping("/category")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -48,9 +42,10 @@ public class CategoryController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<CategoryResponseDTO> update(@PathVariable Long id, @Valid @RequestBody CategoryRequestDTO categoryRequestDTO){
         CategoryResponseDTO category = categoryService.update(id,categoryRequestDTO);
         return ResponseEntity.ok().body(category);
     }
+
 }

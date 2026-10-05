@@ -49,15 +49,15 @@ public class LaunchController {
         return  ResponseEntity.ok().body(launch);
     }
 
-    @GetMapping("/{userId}/{categoryId}")
-    public ResponseEntity<List<LaunchResponseDTO>> findByUser_Id_Category_Id(@PathVariable Long userId, @PathVariable   Long categoryId){
-        List<LaunchResponseDTO> launch = launchService.findByUserIdAndCategoryId(userId,categoryId);
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<LaunchResponseDTO>> findByCategory(@PathVariable Long categoryId){
+        List<LaunchResponseDTO> launch = launchService.findByCategoryId(categoryId);
         return ResponseEntity.ok().body(launch);
     }
 
-    @GetMapping("/{userId}/balance")
-    public ResponseEntity<BalanceResponseDTO> balanceTotal(@PathVariable  Long userId){
-         BalanceResponseDTO balance = launchService.findByUser_Id(userId);
+    @GetMapping("/balance")
+    public ResponseEntity<BalanceResponseDTO> balanceTotal(){
+         BalanceResponseDTO balance = launchService.findBalance();
          return ResponseEntity.ok(balance);
     }
 }

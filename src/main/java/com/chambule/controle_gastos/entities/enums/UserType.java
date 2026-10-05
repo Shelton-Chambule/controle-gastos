@@ -1,12 +1,12 @@
 package com.chambule.controle_gastos.entities.enums;
-public enum CategoryType {
+public enum UserType {
 
-    INCOME("income"),
-    EXPENSE("expense");
+    ADMIN("admin"),
+    USER("user");
 
-    private String  code;
+    private String code;
 
-    CategoryType(String code) {
+    UserType(String code) {
         this.code = code;
     }
 

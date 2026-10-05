@@ -1,26 +1,16 @@
 package com.chambule.controle_gastos.entities.enums;
 public enum LaunchType {
 
-    INCOME(1),
-    EXPENSE(2);
+    INCOME("income"),
+    EXPENSE("expense");
 
-    private int code;
+    private String code;
 
-     LaunchType(int code) {
+    LaunchType(String code) {
         this.code = code;
     }
 
-    public int getCode() {
+    public String getCode() {
         return code;
     }
-
-    public static LaunchType launch(int code){
-         for(LaunchType launchType: LaunchType.values()){
-             if(launchType.getCode() == code){
-                 return launchType;
-             }
-         }
-         throw new IllegalArgumentException("invalid code");
-    }
-
 }

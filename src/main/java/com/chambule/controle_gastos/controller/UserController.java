@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -23,7 +23,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(use);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/{id}")
     public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @Valid @RequestBody UserRequestDTO userRequestDTO) {
         UserResponseDTO userResponseDTO = userService.update(id, userRequestDTO);
         return ResponseEntity.ok().body(userResponseDTO);

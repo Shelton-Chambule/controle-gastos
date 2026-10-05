@@ -1,30 +1,21 @@
 package com.chambule.controle_gastos.entities.enums;
 public enum PaymentMethod {
 
-    CASH(1),
-    PIX(2),
-    DEBIT_CARD(3),
-    CREDIT_CARD(4),
-    BANK_TRANSFER(5),
-    BANK_SLIP(6),
-    OTHER(7);
+    CASH("cash"),
+    PIX("pix"),
+    DEBIT_CARD("debit card"),
+    CREDIT_CARD("credit card"),
+    BANK_TRANSFER("bank transfer"),
+    BANK_SLIP("bank slip"),
+    OTHER("other");
 
-    private int code;
+    private String  code;
 
-    PaymentMethod(int code) {
+    PaymentMethod(String code) {
         this.code = code;
     }
 
-    public int getCode() {
+    public String getCode() {
         return code;
-    }
-
-    public static PaymentMethod paymentMethod(int code) {
-        for (PaymentMethod payment : PaymentMethod.values()) {
-            if (payment.getCode() == code) {
-                return payment;
-            }
-        }
-        throw new IllegalArgumentException("invalid code!");
     }
 }

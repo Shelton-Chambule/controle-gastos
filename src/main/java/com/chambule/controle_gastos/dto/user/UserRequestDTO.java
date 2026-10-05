@@ -6,13 +6,9 @@ import jakarta.validation.constraints.Pattern;
 
 public class UserRequestDTO {
 
-    // Dados enviados pelo usuário
-    @NotBlank(message = "Nome e obrigatório")
-    private String name;
-
     @NotBlank(message = "Campo obrigatório")
     @Email(message = "formato do email, invalido!")
-    private String email;
+    private String login;
 
     @NotBlank(message = "Campo obrigatório")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
@@ -21,26 +17,12 @@ public class UserRequestDTO {
 
     public UserRequestDTO(){}
 
-    public UserRequestDTO(User user) {
-        this.name = user.getName();
-        this.email = user.getEmail();
-        this.password = user.getPassword();
+    public String getLogin() {
+        return login;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getPassword() {

@@ -14,7 +14,10 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
     private String nameCategory;
-    private Integer type;   // despesa ou receita  // id do propretario que criou a categoria
+
+    @Enumerated(EnumType.STRING)
+    private CategoryType type;   // despesa ou receita  // id do propretario que criou a categoria
+
     private LocalDate creationDate;
     private LocalDate updateDate;
 
@@ -27,11 +30,12 @@ public class Category {
 
     public Category(){}
 
-    public Category(Long Id, String nameCategory, CategoryType type, LocalDate creationDate, LocalDate updateDate) {
-        this.Id = Id;
+    public Category(Long id, String nameCategory, CategoryType type, LocalDate creationDate, LocalDate updateDate) {
+        Id = id;
         this.nameCategory = nameCategory;
-        setType(type);
+        this.type = type;
         this.creationDate = creationDate;
+        this.updateDate = updateDate;
     }
 
     public LocalDate getUpdateDate() {
@@ -59,11 +63,11 @@ public class Category {
     }
 
     public CategoryType getType() {
-        return CategoryType.category(type);
+        return type;
     }
 
     public void setType(CategoryType type) {
-        this.type = type.getCode();
+        this.type = type;
     }
 
     public LocalDate getCreationDate() {

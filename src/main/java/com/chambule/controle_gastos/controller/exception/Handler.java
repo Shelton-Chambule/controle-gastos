@@ -36,7 +36,6 @@ public class Handler {
         StandardError standardError = new StandardError(Instant.now(), status.value(), error, email.getMessage(),request.getRequestURI());
         return ResponseEntity.status(status).body(standardError);
     }
-    // MethodArgumentNotValidException
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<StandardError> Validation(MethodArgumentNotValidException validException, HttpServletRequest request){

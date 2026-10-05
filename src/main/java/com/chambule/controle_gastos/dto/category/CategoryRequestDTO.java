@@ -1,5 +1,5 @@
 package com.chambule.controle_gastos.dto.category;
-import com.chambule.controle_gastos.entities.Category;
+
 import com.chambule.controle_gastos.entities.enums.CategoryType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,17 +10,9 @@ public class CategoryRequestDTO {
     private String nameCategory;
 
     @NotNull(message = "Required field")
-    private Integer type;  // despesa ou receita;
+    private CategoryType type;
 
-    @NotNull(message = "Required field")
-    private Long userId;
-
-    public CategoryRequestDTO(){}
-
-    public CategoryRequestDTO(Category category) {
-        this.nameCategory = category.getNameCategory();
-        setType(category.getType());
-        this.userId = category.getUser().getId();
+    public CategoryRequestDTO() {
     }
 
     public String getNameCategory() {
@@ -32,19 +24,10 @@ public class CategoryRequestDTO {
     }
 
     public CategoryType getType() {
-        return CategoryType.category(type);
+        return type;
     }
 
     public void setType(CategoryType type) {
-        this.type = type.getCode();
-    }
-
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
+        this.type = type;
     }
 }
