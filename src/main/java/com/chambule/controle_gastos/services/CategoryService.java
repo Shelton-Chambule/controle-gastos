@@ -1,34 +1,30 @@
 package com.chambule.controle_gastos.services;
-
-import com.chambule.controle_gastos.dto.category.CategoryRequestDTO;
-import com.chambule.controle_gastos.dto.category.CategoryResponseDTO;
+import com.chambule.controle_gastos.dto.category.CategoryRequest;
+import com.chambule.controle_gastos.dto.category.CategoryResponse;
 import com.chambule.controle_gastos.entities.Category;
 import com.chambule.controle_gastos.entities.User;
+import com.chambule.controle_gastos.entities.enums.UserType;
 import com.chambule.controle_gastos.repository.CategoryRepository;
-import com.chambule.controle_gastos.services.exception.DataBase;
-import com.chambule.controle_gastos.services.exception.ResourceNotFound;
+import com.chambule.controle_gastos.exception.DataBase;
+import com.chambule.controle_gastos.exception.ResourceNotFound;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CurrentUserService currentUserService;
 
-    public CategoryService(
-            CategoryRepository categoryRepository,
-            CurrentUserService currentUserService
-    ) {
-        this.categoryRepository = categoryRepository;
-        this.currentUserService = currentUserService;
-    }
+    public CategoryResponse createCategory(CategoryRequest categoryRequestDTO) {
 
-    public CategoryResponseDTO createCategory(CategoryRequestDTO categoryRequestDTO) {
-        User user = currentUserService.get();
+        User user = currentUserService.getCurrentUser();
 
         Category category = new Category();
         category.setNameCategory(categoryRequestDTO.getNameCategory());
@@ -36,35 +32,33 @@ public class CategoryService {
         category.setUser(user);
 
         categoryRepository.save(category);
-        return new CategoryResponseDTO(category);
+        return new CategoryResponse(category);
     }
 
-    public List<CategoryResponseDTO> findAll() {
-        User user = currentUserService.get();
-        List<Category> categories = isAdmin(user)
-                ? categoryRepository.findAll()
-                : categoryRepository.findByUser_Id(user.getId());
+    public List<CategoryResponse> findAll() {
+        User user = currentUserService.getCurrentUser();
+        List<Category> categories = isAdmin(user) ? categoryRepository.findAll() : categoryRepository.findByUser_Id(user.getId());
 
         return categories.stream()
-                .map(CategoryResponseDTO::new)
+                .map(CategoryResponse::new)
                 .collect(Collectors.toList());
     }
 
-    public CategoryResponseDTO findById(Long id) {
-        Category category = findAccessibleCategory(id);
-        return new CategoryResponseDTO(category);
+    public CategoryResponse findById(Long id,Authentication authentication) {
+        Category category = findAccessibleCategory(id,authentication);
+        return new CategoryResponse(category);
     }
 
-    public CategoryResponseDTO update(Long id, CategoryRequestDTO categoryRequestDTO) {
-        Category category = findAccessibleCategory(id);
+    public CategoryResponse update(Long id, CategoryRequest categoryRequestDTO,Authentication authentication) {
+        Category category = findAccessibleCategory(id,authentication);
         category.setNameCategory(categoryRequestDTO.getNameCategory());
         category.setType(categoryRequestDTO.getType());
         categoryRepository.save(category);
-        return new CategoryResponseDTO(category);
+        return new CategoryResponse(category);
     }
 
-    public void delete(Long id) {
-        Category category = findAccessibleCategory(id);
+    public void delete(Long id,Authentication authentication) {
+        Category category = findAccessibleCategory(id,authentication);
 
         try {
             categoryRepository.delete(category);
@@ -73,19 +67,23 @@ public class CategoryService {
         }
     }
 
-    private Category findAccessibleCategory(Long id) {
-        User user = currentUserService.get();
+    private Category findAccessibleCategory(Long id, Authentication authentication) {
+        User user = currentUserService.getCurrentUser();
+        adminAndUser(user, authentication);
 
-        if (isAdmin(user)) {
-            return categoryRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFound(id));
-        }
+        categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFound(id));
 
-        return categoryRepository.findByIdAndUser_Id(id, user.getId())
-                .orElseThrow(() -> new ResourceNotFound(id));
+        return categoryRepository.findByIdAndUser_Id(id, user.getId()).orElseThrow(() -> new ResourceNotFound(id));
     }
 
-    private boolean isAdmin(User user) {
-        return user.getRole().name().equals("ADMIN");
+    public boolean isAdmin(User user){
+        return  user.getRole() == UserType.ADMIN;
+    }
+
+    private void adminAndUser(User user, Authentication authentication) {
+        boolean admin = authentication.getAuthorities().stream().anyMatch(any -> any.getAuthority().equals("ROLE_ADMIN"));
+        boolean users = user.getLogin().equals(authentication.getName());
+
+        if (!admin && !users) throw new AccessDeniedException("Access Denied!");
     }
 }
