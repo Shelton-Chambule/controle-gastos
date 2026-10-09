@@ -2,27 +2,43 @@ package com.chambule.controle_gastos.entities;
 import com.chambule.controle_gastos.entities.enums.LaunchType;
 import com.chambule.controle_gastos.entities.enums.PaymentMethod;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Objects;
 
+
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = "tb_launch")
 public class Launch {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "launch_Id")
     private Long id;
+
+    @Column(name = "description", nullable = false)
     private String description;
+
+    @Column(name = "value", nullable = false)
     private BigDecimal value;
 
     @Enumerated(EnumType.STRING)
     private LaunchType launchType;
 
+    @Column(name = "transaction_date", nullable = false)
     private LocalDate transactionDate;
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
+
+    @Column(name = "creation_date", nullable = false)
     private LocalDate creationDate;
 
     @ManyToOne
@@ -32,8 +48,6 @@ public class Launch {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-
-    public Launch(){}
 
     public Launch(Long id, String description, BigDecimal value, LaunchType launchType, LocalDate transactionDate, PaymentMethod paymentMethod, LocalDate creationDate) {
         this.id = id;
@@ -45,92 +59,8 @@ public class Launch {
         this.creationDate = creationDate;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public BigDecimal getValue() {
-        return value;
-    }
-
-    public void setValue(BigDecimal value) {
-        this.value = value;
-    }
-
-    public LocalDate getTransactionDate() {
-        return transactionDate;
-    }
-
-    public void setTransactionDate(LocalDate transactionDate) {
-        this.transactionDate = transactionDate;
-    }
-
-    public LaunchType getLaunchType() {
-        return launchType;
-    }
-
-    public void setLaunchType(LaunchType launchType) {
-        this.launchType = launchType;
-    }
-
-    public PaymentMethod getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public LocalDate getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDate creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
     @PrePersist
     public void creationDate(){
         this.creationDate = LocalDate.now();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Launch launch = (Launch) o;
-        return Objects.equals(id, launch.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
     }
 }

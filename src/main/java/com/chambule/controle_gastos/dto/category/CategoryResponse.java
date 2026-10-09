@@ -4,7 +4,7 @@ import com.chambule.controle_gastos.entities.enums.CategoryType;
 
 import java.time.LocalDate;
 
-public class CategoryResponseDTO {
+public class CategoryResponse {
 
     private Long categoryId;
     private String nameCategory;
@@ -12,9 +12,9 @@ public class CategoryResponseDTO {
     private CategoryType type;
     private LocalDate creationDate;
 
-    public CategoryResponseDTO(){}
+    public CategoryResponse(){}
 
-    public CategoryResponseDTO(Category category) {
+    public CategoryResponse(Category category) {
         this.categoryId = category.getId();
         this.nameCategory = category.getNameCategory() ;
         this.type = category.getType();

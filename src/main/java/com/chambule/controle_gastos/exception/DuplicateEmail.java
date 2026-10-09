@@ -1,4 +1,4 @@
-package com.chambule.controle_gastos.services.exception;
+package com.chambule.controle_gastos.exception;
 
 public class DuplicateEmail extends RuntimeException {
     public DuplicateEmail(String message) {

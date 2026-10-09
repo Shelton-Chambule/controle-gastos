@@ -1,4 +1,4 @@
-package com.chambule.controle_gastos.services.exception;
+package com.chambule.controle_gastos.exception;
 
 public class DataBase extends RuntimeException {
     public DataBase(String message) {
