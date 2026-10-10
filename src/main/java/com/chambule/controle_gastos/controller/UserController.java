@@ -25,7 +25,7 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/save")
-    public ResponseEntity<UserResponse> save(@Valid  @RequestBody UserRequest userRequestDTO) {
+    public ResponseEntity<UserResponse> createUser(@Valid  @RequestBody UserRequest userRequestDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(userRequestDTO));
     }
 
@@ -36,9 +36,9 @@ public class UserController {
             return  ResponseEntity.status(HttpStatus.OK).body(new TokenResponse(tokenService.generateToken( (User) authentication.getPrincipal())));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> update(@PathVariable Long id, @Valid @RequestBody UserRequest userRequestDTO, Authentication authentication) {
-        return ResponseEntity.ok().body(userService.update(id, userRequestDTO,authentication));
+    @PutMapping("/{userId}")
+    public ResponseEntity<UserResponse> update(@PathVariable Long userId, @Valid @RequestBody UserRequest userRequestDTO, Authentication authentication) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.update(userId, userRequestDTO,authentication));
     }
 
     @GetMapping("/getAll")
@@ -46,8 +46,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(userService.findAll());
     }
 
-    @GetMapping("/{id}")
-    public  ResponseEntity<UserResponse> getOneUser(@PathVariable  Long id, Authentication authentication){
-        return  ResponseEntity.status(HttpStatus.OK).body(userService.findById(id, authentication));
+    @GetMapping("/{userId}")
+    public  ResponseEntity<UserResponse> getOneUser(@PathVariable  Long userId, Authentication authentication){
+        return  ResponseEntity.status(HttpStatus.OK).body(userService.findById(userId, authentication));
     }
 }

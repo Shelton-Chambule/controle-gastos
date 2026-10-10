@@ -18,41 +18,39 @@ public class LaunchController {
 
     private final LaunchService launchService;
 
-    @PostMapping("/createLaunch")
-    public ResponseEntity<LaunchResponse> createLaunch(@Valid  @RequestBody LaunchRequest launchRequestDTO, Authentication authentication){
-            return ResponseEntity.status(HttpStatus.CREATED).body(launchService.createLaunch(launchRequestDTO,authentication));
+    @PostMapping("/save")
+    public ResponseEntity<LaunchResponse> createLaunch(@Valid  @RequestBody LaunchRequest launchRequestDTO){
+            return ResponseEntity.status(HttpStatus.CREATED).body(launchService.createLaunch(launchRequestDTO));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id,Authentication authentication){
-            launchService.deleteById(id,authentication);
+    @DeleteMapping("/{launchId}")
+    public ResponseEntity<Void> delete(@PathVariable Long launchId){
+            launchService.deleteById(launchId);
             return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/find")
     public ResponseEntity<List<LaunchResponse>> getAllLaunchs(){
-        return ResponseEntity.ok().body(launchService.findAll());
+        return ResponseEntity.status(HttpStatus.OK).body(launchService.findAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<LaunchResponse> findById(@PathVariable Long id){
-        return  ResponseEntity.ok().body( launchService.findById(id));
+    @GetMapping("/{launchId}")
+    public ResponseEntity<LaunchResponse> getOneLaunch(@PathVariable Long launchId){
+        return  ResponseEntity.status(HttpStatus.OK).body( launchService.findById(launchId));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<LaunchResponse> update(@PathVariable Long id, @Valid @RequestBody LaunchRequest launchRequestDTO ){
-        return  ResponseEntity.ok().body( launchService.update(id,launchRequestDTO));
+    @PutMapping("/{launchId}")
+    public ResponseEntity<LaunchResponse> update(@PathVariable Long launchId, @Valid @RequestBody LaunchRequest launchRequestDTO ){
+        return  ResponseEntity.status(HttpStatus.OK).body( launchService.update(launchId,launchRequestDTO));
     }
 
-    @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<LaunchResponse>> findByCategory(@PathVariable Long categoryId){
-        List<LaunchResponse> launch = launchService.findByCategoryId(categoryId);
-        return ResponseEntity.ok().body(launch);
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<List<LaunchResponse>> getOneLaunchByCategory(@PathVariable Long categoryId){
+        return ResponseEntity.status(HttpStatus.OK).body( launchService.findByCategoryId(categoryId));
     }
 
-    @GetMapping("/balance")
-    public ResponseEntity<BalanceResponse> balanceTotal(){
-         BalanceResponse balance = launchService.findBalance();
-         return ResponseEntity.ok(balance);
+    @GetMapping("/{userId}")
+    public ResponseEntity<BalanceResponse> balanceTotal(@PathVariable Long userId, Authentication authentication){
+         return ResponseEntity.status(HttpStatus.OK).body( launchService.findBalance(userId,authentication));
     }
 }
