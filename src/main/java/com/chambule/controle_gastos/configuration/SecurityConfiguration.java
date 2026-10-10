@@ -36,8 +36,7 @@ public class SecurityConfiguration {
                                     .requestMatchers(HttpMethod.GET,"/categories/{id}").hasAnyRole("ADMIN","USER")
                                     .requestMatchers(HttpMethod.DELETE,"/categories/{id}").hasRole("USER")
                                     .requestMatchers(HttpMethod.PUT,"/categories/{id}").hasRole("USER")
-                            .anyRequest().denyAll()
-                            ;  // falta a parte de filtros
+                            .anyRequest().denyAll()).addFilterBefore()// falta a parte de filtros
         }
 
         @Bean  // para  criptografia de senhas

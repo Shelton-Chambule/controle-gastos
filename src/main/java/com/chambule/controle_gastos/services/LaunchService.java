@@ -29,8 +29,8 @@ public class LaunchService {
     private final UserRepository userRepository;
     private final CurrentUserService currentUserService;
 
-    public BalanceResponse findBalance(Long id, Authentication authentication) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFound(id));
+    public BalanceResponse findBalance(Long user_Id,Authentication authentication) {
+        User user = userRepository.findById(user_Id).orElseThrow(() -> new ResourceNotFound(user_Id));
 
         validateUser(user, authentication);
 
@@ -50,11 +50,11 @@ public class LaunchService {
         return new BalanceResponse(totalIncome, totalExpense, total);
     }
 
-    public LaunchResponse createLaunch(LaunchRequest request, Authentication authentication) {
+    public LaunchResponse createLaunch(LaunchRequest request) {
         Launch launch = new Launch();
         User user = currentUserService.getCurrentUser();
 
-        Category category = findCategoryForUser(request.getCategoryId(), user,authentication);
+        Category category = findCategoryForUser(request.getCategoryId());
 
         validateCategoryType(category, request.getType());
 
@@ -101,12 +101,10 @@ public class LaunchService {
         launchRepository.delete(launch);
     }
 
-    public LaunchResponse update(Long id, LaunchRequest request, Authentication authentication) {
-        User user = new User();
-        validateUser(user, authentication);
-        Launch launch = findLaunchForCurrentUser(id,authentication);
+    public LaunchResponse update(Long id, LaunchRequest request) {
+        Launch launch = findLaunchForCurrentUser(id);
 
-        Category category = findCategoryForUser(request.getCategoryId(), user, authentication);
+        Category category = findCategoryForUser(request.getCategoryId());
 
         validateCategoryType(category, request.getType());
 
@@ -128,24 +126,25 @@ public class LaunchService {
     }
 
     private Launch findLaunchForCurrentUser(Long id) {
-        User user = new User();
+        User user = currentUserService.getCurrentUser();
         launchRepository.findById(id).orElseThrow(() -> new ResourceNotFound(id));
         return launchRepository.findByIdAndUser_Id(id, user.getId()).orElseThrow(() -> new ResourceNotFound(id));
     }
 
-    private Category findCategoryForUser(Long categoryId, User user, Authentication authentication) {
-        validateUser(user, authentication);
+    private Category findCategoryForUser(Long categoryId) {
+        User user =  currentUserService.getCurrentUser();
         return categoryRepository.findByIdAndUser_Id(categoryId, user.getId())
                 .orElseThrow(() -> new ResourceNotFound(categoryId));
     }
 
-    private Category findAccessibleCategory(Long categoryId, User user) {
+    private Category findAccessibleCategory(Long categoryId) {
+        User user =  currentUserService.getCurrentUser();
         if (isAdmin(user)) {
             return categoryRepository.findById(categoryId)
                     .orElseThrow(() -> new ResourceNotFound(categoryId));
         }
 
-        return findCategoryForUser(categoryId, user);
+        return findCategoryForUser(categoryId);
     }
 
     private void validateCategoryType(Category category, LaunchType launchType) {
@@ -157,8 +156,10 @@ public class LaunchService {
     }
 
     public  void   validateUser(User user, Authentication authentication){
-        boolean userAdmin =  user.getLogin().equals(authentication.getName());
-         if(!userAdmin) throw new AccessDeniedException("Access Denied!");
+        boolean users =  user.getLogin().equals(authentication.getName());
+        boolean admin = authentication.getAuthorities().stream().anyMatch(any -> any.getAuthority().equals("ROLE_ADMIN"));
+
+         if(!users && !admin) throw new AccessDeniedException("Access Denied!");
     }
 
     public boolean isAdmin(User user){
