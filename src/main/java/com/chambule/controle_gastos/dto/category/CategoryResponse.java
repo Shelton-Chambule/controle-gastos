@@ -1,9 +1,15 @@
 package com.chambule.controle_gastos.dto.category;
 import com.chambule.controle_gastos.entities.Category;
 import com.chambule.controle_gastos.entities.enums.CategoryType;
-
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import java.time.LocalDate;
 
+
+@Getter
+@Setter
+@NoArgsConstructor
 public class CategoryResponse {
 
     private Long categoryId;
@@ -11,8 +17,6 @@ public class CategoryResponse {
     private Long userId;
     private CategoryType type;
     private LocalDate creationDate;
-
-    public CategoryResponse(){}
 
     public CategoryResponse(Category category) {
         this.categoryId = category.getId();

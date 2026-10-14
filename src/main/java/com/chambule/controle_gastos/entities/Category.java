@@ -31,9 +31,6 @@ public class Category {
     @Column(name ="creation_date",nullable = false)
     private LocalDate creationDate;
 
-    @Column(name = "update_date",nullable = false)
-    private LocalDate updateDate;
-
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;
@@ -41,12 +38,11 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private Set<Launch> launches = new HashSet<>();
 
-    public Category(Long id, String nameCategory, CategoryType type, LocalDate creationDate, LocalDate updateDate) {
+    public Category(Long id, String nameCategory, CategoryType type, LocalDate creationDate) {
         this.id = id;
         this.nameCategory = nameCategory;
         this.type = type;
         this.creationDate = creationDate;
-        this.updateDate = updateDate;
     }
 
     @PrePersist
@@ -54,8 +50,4 @@ public class Category {
         this.creationDate = LocalDate.now();
     }
 
-    @PreUpdate
-    public  void updateDate(){
-        this.updateDate = LocalDate.now();
-    }
 }

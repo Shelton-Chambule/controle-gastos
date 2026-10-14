@@ -12,7 +12,7 @@ import java.time.temporal.ChronoUnit;
 @Service
 public class TokenService {
 
-    @Value("${api.secret.key}")
+    @Value("${api.controle.gastos}")
     private String secret;
 
     public String generateToken(User user){
@@ -34,11 +34,12 @@ public class TokenService {
         try{
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm)
+                    .withIssuer("controle.gastos")
                     .build()
                     .verify(token)
                     .getSubject();
-        }catch (JWTVerificationException exception){
-            return "";
+        } catch (JWTVerificationException exception) {
+            return null;
         }
     }
 

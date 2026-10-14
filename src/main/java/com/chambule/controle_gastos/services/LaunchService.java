@@ -52,6 +52,7 @@ public class LaunchService {
 
     public LaunchResponse createLaunch(LaunchRequest request) {
         Launch launch = new Launch();
+
         User user = currentUserService.getCurrentUser();
 
         Category category = findCategoryForUser(request.getCategoryId());
