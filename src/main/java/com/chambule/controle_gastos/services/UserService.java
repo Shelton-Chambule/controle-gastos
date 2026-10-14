@@ -31,8 +31,22 @@ public class UserService  implements UserDetailsService {
         Optional<User> user = userRepository.findByLogin(username);
         return user.orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
+    public UserResponse saveAdmin(UserRequest userRequestDTO) {
 
-    public UserResponse save(UserRequest userRequestDTO) {
+        if (userRepository.existsByLogin(userRequestDTO.getLogin())) {
+            throw new DuplicateEmail("This email address is already registered");
+        }
+
+        User user = new User();
+        user.setRole(UserType.ADMIN);
+        user.setLogin(userRequestDTO.getLogin());
+        user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+        userRepository.save(user);
+        return new UserResponse(user);
+
+    }
+
+    public UserResponse saveUser(UserRequest userRequestDTO) {
 
         if (userRepository.existsByLogin(userRequestDTO.getLogin())) {
             throw new DuplicateEmail("This email address is already registered");

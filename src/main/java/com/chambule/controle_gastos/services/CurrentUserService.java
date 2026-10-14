@@ -23,8 +23,7 @@ public class CurrentUserService {
         if (auth == null || !auth.isAuthenticated()) {
             throw new AccessDeniedException("User not authenticated");
         }
-        return userRepository.findByLogin(auth.getName())
-                .orElseThrow(() -> new ResourceNotFound(auth.getName()));
+        return userRepository.findByLogin(auth.getName()).orElseThrow(() -> new ResourceNotFound(auth.getName()));
     }
 
     public boolean isAdmin(User user){

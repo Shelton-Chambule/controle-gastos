@@ -40,7 +40,7 @@ public class LaunchController {
     }
 
     @PutMapping("/{launchId}")
-    public ResponseEntity<LaunchResponse> update(@PathVariable Long launchId, @Valid @RequestBody LaunchRequest launchRequestDTO ){
+    public ResponseEntity<LaunchResponse> updateLaunch(@PathVariable Long launchId, @Valid @RequestBody LaunchRequest launchRequestDTO ){
         return  ResponseEntity.status(HttpStatus.OK).body( launchService.update(launchId,launchRequestDTO));
     }
 

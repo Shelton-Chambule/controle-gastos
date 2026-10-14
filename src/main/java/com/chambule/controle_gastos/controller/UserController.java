@@ -1,5 +1,5 @@
 package com.chambule.controle_gastos.controller;
-import com.chambule.controle_gastos.dto.TokenResponse;
+import com.chambule.controle_gastos.dto.token.TokenResponse;
 import com.chambule.controle_gastos.dto.user.UserRequest;
 import com.chambule.controle_gastos.dto.user.UserResponse;
 import com.chambule.controle_gastos.entities.User;
@@ -26,7 +26,12 @@ public class UserController {
 
     @PostMapping("/save")
     public ResponseEntity<UserResponse> createUser(@Valid  @RequestBody UserRequest userRequestDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(userRequestDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveUser(userRequestDTO));
+    }
+
+    @PostMapping("/save/admin")
+    public ResponseEntity<UserResponse> createAdmin(@Valid  @RequestBody UserRequest userRequestDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveAdmin(userRequestDTO));
     }
 
     @PostMapping("/login")

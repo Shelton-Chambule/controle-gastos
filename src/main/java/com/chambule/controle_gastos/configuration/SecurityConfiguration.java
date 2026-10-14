@@ -30,6 +30,7 @@ public class SecurityConfiguration {
                                 .accessDeniedHandler(securityExceptionHandler)).authorizeHttpRequests(authorize -> authorize
                                 .requestMatchers(HttpMethod.POST, "/users/save").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/users/save/admin").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/users/{id}").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers(HttpMethod.GET, "/users/getAll").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/users/{id}").hasAnyRole("ADMIN", "USER")
@@ -38,6 +39,13 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.GET, "/categories/{id}").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers(HttpMethod.DELETE, "/categories/{id}").hasRole("USER")
                                 .requestMatchers(HttpMethod.PUT, "/categories/{id}").hasRole("USER")
+                                .requestMatchers(HttpMethod.POST,"/launchs/save").hasRole("USER")
+                                .requestMatchers(HttpMethod.GET,"/launchs/{launchId}").hasRole("USER")
+                                .requestMatchers(HttpMethod.GET,"/launchs/find").hasRole("USER")
+                                .requestMatchers(HttpMethod.PUT,"/launchs/{launchId}").hasRole("USER")
+                                .requestMatchers(HttpMethod.GET,"/launchs/{userId}").hasRole("USER")
+                                .requestMatchers(HttpMethod.GET,"/launchs/{categoryId}").hasRole("USER")
+                                .requestMatchers(HttpMethod.DELETE,"/launchs/{launchId}").hasRole("USER")
                                 .anyRequest().denyAll()).
                         addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();
 
@@ -50,7 +58,7 @@ public class SecurityConfiguration {
 
 
         @Bean
-        public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration){
+        public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
             return authenticationConfiguration.getAuthenticationManager();
         }
 }

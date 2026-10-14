@@ -22,7 +22,7 @@ public class LaunchRequest {
 
     @NotBlank(message = "Required field")
     @JsonProperty(required = true)
-    @Size(min = 100, max = 250, message = "Description must have between 3 and 150 characters")
+    //@Size(min = 100, max = 250, message = "Description must have between 3 and 150 characters")
     private String description;
 
     @NotNull(message = "Required field")
@@ -45,5 +45,9 @@ public class LaunchRequest {
     @NotNull(message = "Required field")
     @JsonProperty(required = true)
     private Long categoryId;
+
+    @NotNull(message = "Required field")
+    @JsonProperty(required = true)
+    private Long userId;
 
 }

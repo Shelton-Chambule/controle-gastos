@@ -22,25 +22,25 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.createCategory(categoryRequestDTO));
     }
 
-    @GetMapping("getAll")
+    @GetMapping("/getAll")
     public ResponseEntity<List<CategoryResponse>> getAllCategories(){
         return ResponseEntity.ok().body(categoryService.findAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CategoryResponse> getOneCategory(@PathVariable Long id, Authentication authentication){
-        return ResponseEntity.ok().body(categoryService.findById(id,authentication));
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<CategoryResponse> getOneCategory(@PathVariable Long categoryId, Authentication authentication){
+        return ResponseEntity.ok().body(categoryService.findById(categoryId,authentication));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<CategoryResponse> deleteOneCategories(@PathVariable Long id, Authentication authentication){
-        categoryService.delete(id,authentication);
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<CategoryResponse> deleteOneCategories(@PathVariable Long categoryId, Authentication authentication){
+        categoryService.delete(categoryId,authentication);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CategoryResponse> updateCategories(@PathVariable Long id, @Valid @RequestBody CategoryRequest categoryRequestDTO, Authentication authentication){
-        return ResponseEntity.ok().body(categoryService.update(id,categoryRequestDTO,authentication));
+    @PutMapping("/{categoryId}")
+    public ResponseEntity<CategoryResponse> updateCategories(@PathVariable Long categoryId, @Valid @RequestBody CategoryRequest categoryRequestDTO, Authentication authentication){
+        return ResponseEntity.ok().body(categoryService.update(categoryId,categoryRequestDTO,authentication));
     }
 
 }

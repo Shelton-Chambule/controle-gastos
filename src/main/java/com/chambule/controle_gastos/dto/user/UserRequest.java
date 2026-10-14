@@ -19,7 +19,7 @@ public class UserRequest {
 
     @NotBlank(message = "Campo obrigatório")
     @JsonProperty(required = true)
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
-            message = "A senha deve conter maiúscula, minúscula, número e caractere especial")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{8,}$",
+            message = "Password must contain uppercase and lowercase letters, a number, and a special character.")
     private String password;
 }
