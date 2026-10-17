@@ -6,8 +6,10 @@ import com.chambule.controle_gastos.exception.AccessDeniedException;
 import com.chambule.controle_gastos.exception.ResourceNotFound;
 import com.chambule.controle_gastos.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,14 +22,39 @@ public class CurrentUserService {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        if (auth == null || !auth.isAuthenticated()) {
+        if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
             throw new AccessDeniedException("User not authenticated");
         }
-        return userRepository.findByLogin(auth.getName()).orElseThrow(() -> new ResourceNotFound(auth.getName()));
+
+        String login = extractLogin(auth);
+        return userRepository.findByLogin(login).orElseThrow(() -> new ResourceNotFound(login));
     }
 
-    public boolean isAdmin(User user){
-            return  user.getRole() == UserType.ADMIN;
+    private String extractLogin(Authentication auth) {
+        Object principal = auth.getPrincipal();
+
+        if (principal instanceof User user) {
+            return user.getLogin();
+        }
+
+        if (principal instanceof UserDetails userDetails) {
+            return userDetails.getUsername();
+        }
+
+        if (principal instanceof String login) {
+            return login;
+        }
+
+        String name = auth.getName();
+        if (name == null || name.isBlank() || "anonymousUser".equals(name)) {
+            throw new AccessDeniedException("User not authenticated");
+        }
+
+        return name;
+    }
+
+    public boolean isAdmin(User user) {
+        return user.getRole() == UserType.ADMIN;
     }
 
     public void assertOwnerOrAdmin(Launch launch) {
@@ -36,5 +63,4 @@ public class CurrentUserService {
             throw new AccessDeniedException("Sem permissão para este lançamento");
         }
     }
-
 }
