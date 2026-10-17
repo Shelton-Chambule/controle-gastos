@@ -42,8 +42,10 @@ public class LaunchRequest {
     @NotNull(message = "Required field")
     private PaymentMethod paymentMethod;
 
-    @NotNull(message = "Required field")
+    @NotBlank(message = "Required field")
     @JsonProperty(required = true)
+    private String nameCategory;
+
     private Long categoryId;
 
     @NotNull(message = "Required field")

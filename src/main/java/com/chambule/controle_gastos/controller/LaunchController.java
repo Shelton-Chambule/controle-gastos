@@ -34,7 +34,7 @@ public class LaunchController {
         return ResponseEntity.status(HttpStatus.OK).body(launchService.findAll());
     }
 
-    @GetMapping("/{launchId}")
+    @GetMapping("/getOne/{launchId}")
     public ResponseEntity<LaunchResponse> getOneLaunch(@PathVariable Long launchId){
         return  ResponseEntity.status(HttpStatus.OK).body( launchService.findById(launchId));
     }
@@ -44,12 +44,12 @@ public class LaunchController {
         return  ResponseEntity.status(HttpStatus.OK).body( launchService.update(launchId,launchRequestDTO));
     }
 
-    @GetMapping("/{categoryId}")
+    @GetMapping("/category/{categoryId}")
     public ResponseEntity<List<LaunchResponse>> getOneLaunchByCategory(@PathVariable Long categoryId){
         return ResponseEntity.status(HttpStatus.OK).body( launchService.findByCategoryId(categoryId));
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/balance/{userId}")
     public ResponseEntity<BalanceResponse> balanceTotal(@PathVariable Long userId, Authentication authentication){
          return ResponseEntity.status(HttpStatus.OK).body( launchService.findBalance(userId,authentication));
     }

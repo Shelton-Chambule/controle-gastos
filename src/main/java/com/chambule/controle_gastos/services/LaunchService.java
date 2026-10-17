@@ -5,6 +5,7 @@ import com.chambule.controle_gastos.dto.launch.LaunchResponse;
 import com.chambule.controle_gastos.entities.Category;
 import com.chambule.controle_gastos.entities.Launch;
 import com.chambule.controle_gastos.entities.User;
+import com.chambule.controle_gastos.entities.enums.CategoryType;
 import com.chambule.controle_gastos.entities.enums.LaunchType;
 import com.chambule.controle_gastos.entities.enums.UserType;
 import com.chambule.controle_gastos.exception.CategoryNotFound;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,8 +31,8 @@ public class LaunchService {
     private final UserRepository userRepository;
     private final CurrentUserService currentUserService;
 
-    public BalanceResponse findBalance(Long user_Id,Authentication authentication) {
-        User user = userRepository.findById(user_Id).orElseThrow(() -> new ResourceNotFound(user_Id));
+    public BalanceResponse findBalance(Long userId,Authentication authentication) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFound(userId));
 
         validateUser(user, authentication);
 
@@ -50,15 +52,17 @@ public class LaunchService {
         return new BalanceResponse(totalIncome, totalExpense, total);
     }
 
+    @Transactional
     public LaunchResponse createLaunch(LaunchRequest request) {
-        Launch launch = new Launch();
-
         User user = currentUserService.getCurrentUser();
 
-        Category category = findCategoryForUser(request.getCategoryId());
+        Category category = new Category();
+        category.setNameCategory(request.getNameCategory());
+        category.setType(CategoryType.valueOf(request.getType().name()));
+        category.setUser(user);
+        category = categoryRepository.save(category);
 
-        validateCategoryType(category, request.getType());
-
+        Launch launch = new Launch();
         launch.setDescription(request.getDescription());
         launch.setValue(validateValue(request.getValue()));
         launch.setLaunchType(request.getType());
@@ -157,6 +161,7 @@ public class LaunchService {
     }
 
     public  void   validateUser(User user, Authentication authentication){
+
         boolean users =  user.getLogin().equals(authentication.getName());
         boolean admin = authentication.getAuthorities().stream().anyMatch(any -> any.getAuthority().equals("ROLE_ADMIN"));
 
