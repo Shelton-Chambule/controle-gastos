@@ -7,6 +7,7 @@ import com.chambule.controle_gastos.services.TokenService;
 import com.chambule.controle_gastos.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -47,8 +48,8 @@ public class UserController {
     }
 
     @GetMapping("/getAll")
-    public  ResponseEntity<List<UserResponse>> getAllUsers(){
-            return ResponseEntity.status(HttpStatus.OK).body(userService.findAll());
+    public  ResponseEntity<List<UserResponse>> getAllUsers(Pageable pageable){
+            return ResponseEntity.status(HttpStatus.OK).body(userService.findAll(pageable));
     }
 
     @GetMapping("/{userId}")

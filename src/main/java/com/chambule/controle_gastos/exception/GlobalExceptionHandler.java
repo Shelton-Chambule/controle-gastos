@@ -26,6 +26,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(standardError);
     }
 
+    @ExceptionHandler(CategoryAlreadyExistsException.class)
+    public ResponseEntity<StandardError> DuplicateCategory(CategoryAlreadyExistsException category, HttpServletRequest request){
+        String error = "Category already exists";
+        HttpStatus status = HttpStatus.CONFLICT;
+        StandardError standardError = new StandardError(Instant.now(), status.value(), error, category.getMessage(),request.getRequestURI());
+        return ResponseEntity.status(status).body(standardError);
+    }
+
     @ExceptionHandler(DataBase.class)
     public ResponseEntity<StandardError> DataBaseViolation(DataBase email, HttpServletRequest request){
         String error = "This release is associated with a category";

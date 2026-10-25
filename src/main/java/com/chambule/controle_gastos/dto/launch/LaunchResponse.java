@@ -19,18 +19,14 @@ public class LaunchResponse {
     private LaunchType type;
     private LocalDate transactionDate;
     private PaymentMethod paymentMethod;
-    private Long categoryId;
-    private Long userId;
+
 
     public LaunchResponse(Launch launch) {
-         this.id = launch.getId();
+        this.id = launch.getId();
         this.description = launch.getDescription();
         this.value = launch.getValue();
         this.type = launch.getLaunchType();
         this.transactionDate = launch.getTransactionDate();
         this.paymentMethod = launch.getPaymentMethod();
-        this.categoryId = launch.getCategory().getId();
-        this.userId = launch.getUser().getId();
-
     }
 }

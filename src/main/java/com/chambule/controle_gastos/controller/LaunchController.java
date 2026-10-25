@@ -1,13 +1,16 @@
 package com.chambule.controle_gastos.controller;
+import com.chambule.controle_gastos.dto.PageResponse;
 import com.chambule.controle_gastos.dto.launch.BalanceResponse;
 import com.chambule.controle_gastos.dto.launch.LaunchRequest;
 import com.chambule.controle_gastos.dto.launch.LaunchResponse;
+import com.chambule.controle_gastos.entities.User;
 import com.chambule.controle_gastos.services.LaunchService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -19,8 +22,8 @@ public class LaunchController {
     private final LaunchService launchService;
 
     @PostMapping("/save")
-    public ResponseEntity<LaunchResponse> createLaunch(@Valid  @RequestBody LaunchRequest launchRequestDTO){
-            return ResponseEntity.status(HttpStatus.CREATED).body(launchService.createLaunch(launchRequestDTO));
+    public ResponseEntity<LaunchResponse> createLaunch( @RequestBody @Valid LaunchRequest launchRequestDTO, @AuthenticationPrincipal User user){
+            return ResponseEntity.status(HttpStatus.CREATED).body(launchService.createLaunch(launchRequestDTO,user));
     }
 
     @DeleteMapping("/{launchId}")
@@ -30,8 +33,8 @@ public class LaunchController {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<List<LaunchResponse>> getAllLaunchs(){
-        return ResponseEntity.status(HttpStatus.OK).body(launchService.findAll());
+    public ResponseEntity<PageResponse<LaunchResponse>> getAllLaunchs(Pageable pageable){
+        return ResponseEntity.status(HttpStatus.OK).body(launchService.findAll(pageable));
     }
 
     @GetMapping("/getOne/{launchId}")
@@ -49,8 +52,8 @@ public class LaunchController {
         return ResponseEntity.status(HttpStatus.OK).body( launchService.findByCategoryId(categoryId));
     }
 
-    @GetMapping("/balance/{userId}")
-    public ResponseEntity<BalanceResponse> balanceTotal(@PathVariable Long userId, Authentication authentication){
-         return ResponseEntity.status(HttpStatus.OK).body( launchService.findBalance(userId,authentication));
+    @GetMapping("/balance")
+    public ResponseEntity<BalanceResponse> balanceTotal(Pageable pageable){
+         return ResponseEntity.status(HttpStatus.OK).body( launchService.findBalance(pageable));
     }
 }

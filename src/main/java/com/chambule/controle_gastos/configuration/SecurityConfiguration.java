@@ -43,7 +43,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.GET, "/launchs/getOne/{launchId}").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers(HttpMethod.GET, "/launchs/find").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers(HttpMethod.PUT, "/launchs/{launchId}").hasAnyRole("ADMIN", "USER")
-                                .requestMatchers(HttpMethod.GET, "/launchs/balance/{userId}").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.GET, "/launchs/balance").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers(HttpMethod.GET, "/launchs/category/{categoryId}").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers(HttpMethod.DELETE, "/launchs/{launchId}").hasAnyRole("ADMIN", "USER")
                                 .anyRequest().denyAll()).

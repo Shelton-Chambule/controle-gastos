@@ -1,4 +1,5 @@
 package com.chambule.controle_gastos.services;
+import com.chambule.controle_gastos.dto.PageResponse;
 import com.chambule.controle_gastos.dto.launch.BalanceResponse;
 import com.chambule.controle_gastos.dto.launch.LaunchRequest;
 import com.chambule.controle_gastos.dto.launch.LaunchResponse;
@@ -8,16 +9,17 @@ import com.chambule.controle_gastos.entities.User;
 import com.chambule.controle_gastos.entities.enums.CategoryType;
 import com.chambule.controle_gastos.entities.enums.LaunchType;
 import com.chambule.controle_gastos.entities.enums.UserType;
-import com.chambule.controle_gastos.exception.CategoryNotFound;
+import com.chambule.controle_gastos.mapper.LaunchMapper;
 import com.chambule.controle_gastos.repository.CategoryRepository;
 import com.chambule.controle_gastos.repository.LaunchRepository;
+import com.chambule.controle_gastos.exception.CategoryAlreadyExistsException;
 import com.chambule.controle_gastos.exception.ResourceNotFound;
-import com.chambule.controle_gastos.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,39 +30,12 @@ public class LaunchService {
 
     private final LaunchRepository launchRepository;
     private final CategoryRepository categoryRepository;
-    private final UserRepository userRepository;
     private final CurrentUserService currentUserService;
 
-    public BalanceResponse findBalance(Long userId,Authentication authentication) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFound(userId));
-
-        validateUser(user, authentication);
-
-        List<Launch> launches = launchRepository.findByUser_Id(user.getId());
-
-        BigDecimal totalIncome = launches.stream()
-                .filter(launch -> launch.getLaunchType() == LaunchType.INCOME)
-                .map(Launch::getValue)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        BigDecimal totalExpense = launches.stream()
-                .filter(launch -> launch.getLaunchType() == LaunchType.EXPENSE)
-                .map(Launch::getValue)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        BigDecimal total = totalIncome.subtract(totalExpense);
-        return new BalanceResponse(totalIncome, totalExpense, total);
-    }
-
     @Transactional
-    public LaunchResponse createLaunch(LaunchRequest request) {
-        User user = currentUserService.getCurrentUser();
+    public LaunchResponse createLaunch(LaunchRequest request, User user) {
 
-        Category category = new Category();
-        category.setNameCategory(request.getNameCategory());
-        category.setType(CategoryType.valueOf(request.getType().name()));
-        category.setUser(user);
-        category = categoryRepository.save(category);
+        Category category = createCategory(request, user);
 
         Launch launch = new Launch();
         launch.setDescription(request.getDescription());
@@ -75,43 +50,58 @@ public class LaunchService {
         return new LaunchResponse(savedLaunch);
     }
 
-    public List<LaunchResponse> findAll() {
+    public BalanceResponse findBalance(Pageable pageable) {
         User user = currentUserService.getCurrentUser();
-        List<Launch> launches = isAdmin(user)  ? launchRepository.findAll() : launchRepository.findByUser_Id(user.getId());
-        return launches.stream().map(LaunchResponse::new).collect(Collectors.toList());
+
+        Page<Launch> launches = isAdmin(user)
+                ? launchRepository.findAll(pageable)
+                : launchRepository.findByUser_Id(user.getId(), pageable);
+
+        BigDecimal totalIncome = sumByType(launches, LaunchType.INCOME);
+        BigDecimal totalExpense = sumByType(launches, LaunchType.EXPENSE);
+
+        return new BalanceResponse(totalIncome, totalExpense, totalIncome.subtract(totalExpense));
+    }
+
+    public PageResponse<LaunchResponse> findAll(Pageable pageable) {
+        User user = currentUserService.getCurrentUser();
+
+        Page<Launch> launches = isAdmin(user)
+                ? launchRepository.findAll(pageable)
+                : launchRepository.findByUser_Id(user.getId(), pageable);
+
+        Page<LaunchResponse> launchResponses = launches.map(LaunchMapper::toLaunch);
+        return PageResponse.from(launchResponses);
     }
 
     public LaunchResponse findById(Long id) {
-        User user =  currentUserService.getCurrentUser();
-        Launch launch = isAdmin(user) ? launchRepository.findById(id).orElseThrow(() -> new ResourceNotFound(id))
-                : launchRepository.findByIdAndUser_Id(id, user.getId())
-                .orElseThrow(() -> new ResourceNotFound(id));
+        Launch launch = findLaunchForCurrentUser(id);
         return new LaunchResponse(launch);
     }
 
     public List<LaunchResponse> findByCategoryId(Long categoryId) {
         User user = currentUserService.getCurrentUser();
-        findAccessibleCategory(categoryId);
+        Category category = findAccessibleCategory(categoryId, user);
 
         List<Launch> launches = isAdmin(user)
-                ? launchRepository.findByCategory_Id(categoryId)
-                : launchRepository.findByUser_IdAndCategory_Id(user.getId(), categoryId);
+                ? launchRepository.findByCategory_Id(category.getId())
+                : launchRepository.findByUser_IdAndCategory_Id(user.getId(), category.getId());
 
         return launches.stream().map(LaunchResponse::new).collect(Collectors.toList());
     }
 
+    @Transactional
     public void deleteById(Long id) {
         Launch launch = findLaunchForCurrentUser(id);
-        currentUserService.assertOwnerOrAdmin(launch);
         launchRepository.delete(launch);
     }
 
+    @Transactional
     public LaunchResponse update(Long id, LaunchRequest request) {
-        Launch launch = findLaunchForCurrentUser(id);
+        User user = currentUserService.getCurrentUser();
+        Launch launch = findLaunchForCurrentUser(id, user);
 
-        Category category = findCategoryForUser(request.getCategoryId());
-
-        validateCategoryType(category, request.getType());
+        Category category = createCategory(request, user);
 
         launch.setDescription(request.getDescription());
         launch.setValue(validateValue(request.getValue()));
@@ -123,6 +113,26 @@ public class LaunchService {
         return new LaunchResponse(launchRepository.save(launch));
     }
 
+    private Category createCategory(LaunchRequest request, User user) {
+        categoryRepository.findByNameCategoryAndUser(request.getNameCategory(), user)
+                .ifPresent(existing -> {
+                    throw new CategoryAlreadyExistsException(request.getNameCategory());
+                });
+
+        Category newCategory = new Category();
+        newCategory.setNameCategory(request.getNameCategory());
+        newCategory.setType(CategoryType.valueOf(request.getType().name()));
+        newCategory.setUser(user);
+        return categoryRepository.save(newCategory);
+    }
+
+    private BigDecimal sumByType(Page<Launch> launches, LaunchType type) {
+        return launches.stream()
+                .filter(launch -> launch.getLaunchType() == type)
+                .map(Launch::getValue)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
     private BigDecimal validateValue(BigDecimal value) {
         if (value == null || value.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Value must be greater than zero");
@@ -131,44 +141,31 @@ public class LaunchService {
     }
 
     private Launch findLaunchForCurrentUser(Long id) {
-        User user = currentUserService.getCurrentUser();
-        launchRepository.findById(id).orElseThrow(() -> new ResourceNotFound(id));
-        return launchRepository.findByIdAndUser_Id(id, user.getId()).orElseThrow(() -> new ResourceNotFound(id));
+        return findLaunchForCurrentUser(id, currentUserService.getCurrentUser());
     }
 
-    private Category findCategoryForUser(Long categoryId) {
-        User user =  currentUserService.getCurrentUser();
-        return categoryRepository.findByIdAndUser_Id(categoryId, user.getId())
+    private Launch findLaunchForCurrentUser(Long id, User user) {
+        return isAdmin(user)
+                ? launchRepository.findById(id).orElseThrow(() -> new ResourceNotFound(id))
+                : launchRepository.findByIdAndUser_Id(id, user.getId())
+                .orElseThrow(() -> new ResourceNotFound(id));
+    }
+
+    private Category findAccessibleCategory(Long categoryId, User user) {
+        return isAdmin(user)
+                ? categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFound(categoryId))
+                : categoryRepository.findByIdAndUser_Id(categoryId, user.getId())
                 .orElseThrow(() -> new ResourceNotFound(categoryId));
-    }
-
-    private Category findAccessibleCategory(Long categoryId) {
-        User user =  currentUserService.getCurrentUser();
-        if (isAdmin(user)) {
-            return categoryRepository.findById(categoryId)
-                    .orElseThrow(() -> new ResourceNotFound(categoryId));
-        }
-
-        return findCategoryForUser(categoryId);
     }
 
     private void validateCategoryType(Category category, LaunchType launchType) {
         if (!category.getType().name().equals(launchType.name())) {
-            throw new CategoryNotFound("Category not found!");
+            throw new IllegalArgumentException("Category type is incompatible with launch type");
         }
-
-        throw new IllegalArgumentException("Category type is incompatible with launch type");
     }
 
-    public  void   validateUser(User user, Authentication authentication){
-
-        boolean users =  user.getLogin().equals(authentication.getName());
-        boolean admin = authentication.getAuthorities().stream().anyMatch(any -> any.getAuthority().equals("ROLE_ADMIN"));
-
-         if(!users && !admin) throw new AccessDeniedException("Access Denied!");
-    }
-
-    public boolean isAdmin(User user){
-        return  user.getRole() == UserType.ADMIN;
+    public boolean isAdmin(User user) {
+        return user.getRole() == UserType.ADMIN;
     }
 }

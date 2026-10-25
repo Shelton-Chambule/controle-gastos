@@ -16,7 +16,6 @@ public class TokenService {
     private String secret;
 
     public String generateToken(User user){
-
         try{
             Algorithm algorithm = Algorithm.HMAC256(secret);
                 String token = JWT.create()
@@ -46,4 +45,5 @@ public class TokenService {
     private Instant expireToken(){
         return Instant.now().plus(2, ChronoUnit.HOURS);
     }
+
 }

@@ -35,7 +35,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "login", nullable = false)
+    @Column(name = "login", nullable = false, unique = true)
     private String login;
 
     @Column(name = "password", nullable = false)
@@ -45,7 +45,7 @@ public class User implements UserDetails {
     private LocalDate creationDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "roles")
+    @Column(name = "roles", nullable = false)
     private UserType role;
 
     @OneToMany(mappedBy = "user")

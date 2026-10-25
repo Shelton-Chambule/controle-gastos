@@ -1,9 +1,11 @@
 package com.chambule.controle_gastos.controller;
+import com.chambule.controle_gastos.dto.PageResponse;
 import com.chambule.controle_gastos.dto.category.CategoryRequest;
 import com.chambule.controle_gastos.dto.category.CategoryResponse;
 import com.chambule.controle_gastos.services.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -23,8 +25,8 @@ public class CategoryController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<CategoryResponse>> getAllCategories(){
-        return ResponseEntity.ok().body(categoryService.findAll());
+    public ResponseEntity<PageResponse<CategoryResponse>> getAllCategories(Pageable pageable){
+        return ResponseEntity.ok().body(categoryService.findAll(pageable));
     }
 
     @GetMapping("/{categoryId}")
