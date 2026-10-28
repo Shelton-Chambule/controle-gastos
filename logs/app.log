@@ -1,0 +1,85 @@
+2026-10-28 00:07:58.050 [] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=34m58s174ms513µs100ns).
+2026-10-28 08:00:39.920 [] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=7h52m41s869ms878µs900ns).
+2026-10-28 08:12:40.982 [] INFO  o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-10-28 08:12:40.986 [] INFO  o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-10-28 08:12:40.990 [] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28 08:12:40.991 [] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-10-28 08:12:40.997 [] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-10-28 14:08:52.511 [] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.3.Final
+2026-10-28 14:08:52.549 [] INFO  c.c.c.ControleGastosApplication - Starting ControleGastosApplication using Java 25.0.3 with PID 11936 (C:\Users\MRX\Documents\Repositorio\controle-gastos\target\classes started by MRX in C:\Users\MRX\Documents\Repositorio\controle-gastos)
+2026-10-28 14:08:52.549 [] INFO  c.c.c.ControleGastosApplication - No active profile set, falling back to 1 default profile: "default"
+2026-10-28 14:08:53.124 [] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-28 14:08:53.174 [] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 43 ms. Found 3 JPA repository interfaces.
+2026-10-28 14:08:53.580 [] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-10-28 14:08:53.590 [] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-10-28 14:08:53.591 [] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-10-28 14:08:53.591 [] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-10-28 14:08:53.645 [] INFO  o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 1055 ms
+2026-10-28 14:08:53.837 [] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-10-28 14:08:53.963 [] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@49c1e294
+2026-10-28 14:08:53.965 [] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-10-28 14:08:53.980 [] INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/controle_gastos (PostgreSQL 18.3)
+2026-10-28 14:08:54.035 [] INFO  o.f.core.internal.command.DbValidate - Successfully validated 2 migrations (execution time 00:00.020s)
+2026-10-28 14:08:54.228 [] INFO  o.f.core.internal.command.DbMigrate - Current version of schema "public": 1
+2026-10-28 14:08:54.230 [] INFO  o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2026-10-28 14:08:54.307 [] INFO  org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-28 14:08:54.351 [] INFO  org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.4.5.Final
+2026-10-28 14:08:54.696 [] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-28 14:08:54.770 [] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/controle_gastos]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 18.3
+	Default catalog/schema: controle_gastos/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-28 14:08:55.652 [] INFO  org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-28 14:08:55.693 [] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28 14:08:55.737 [] INFO  o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-28 14:08:56.018 [] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name userService
+2026-10-28 14:08:56.045 [] WARN  o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-28 14:08:56.347 [] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-10-28 14:08:56.364 [] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-10-28 14:08:56.368 [] INFO  c.c.c.ControleGastosApplication - Started ControleGastosApplication in 4.273 seconds (process running for 4.65)
+2026-10-28 14:10:05.478 [] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-28 14:10:05.479 [] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-10-28 14:10:05.482 [] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-10-28 14:10:05.537 [] INFO  c.c.c.controller.UserController - POST /users/login - email='belga@gmail.com'
+2026-10-28 14:10:05.716 [] INFO  c.c.c.controller.UserController - Login successful for email='belga@gmail.com'
+2026-10-28 14:10:05.717 [] INFO  c.c.c.services.TokenService - Generating token for login='belga@gmail.com'
+2026-10-28 14:11:00.714 [] INFO  c.c.c.controller.CategoryController - GET /categories
+2026-10-28 14:11:00.714 [] INFO  c.c.c.services.CategoryService - Listing categories, page=0, size=20
+2026-10-28 14:11:00.730 [] INFO  c.c.c.services.CategoryService - Returning 4 categorie(s) out of 4 total
+2026-10-28 14:12:28.829 [] INFO  c.c.c.controller.CategoryController - GET /categories
+2026-10-28 14:12:28.829 [] INFO  c.c.c.services.CategoryService - Listing categories, page=0, size=5
+2026-10-28 14:12:28.833 [] INFO  c.c.c.services.CategoryService - Returning 4 categorie(s) out of 4 total
+2026-10-28 14:12:45.918 [] INFO  c.c.c.controller.CategoryController - GET /categories
+2026-10-28 14:12:45.919 [] INFO  c.c.c.services.CategoryService - Listing categories, page=0, size=7
+2026-10-28 14:12:45.921 [] INFO  c.c.c.services.CategoryService - Returning 4 categorie(s) out of 4 total
+2026-10-28 14:18:23.459 [] INFO  c.c.c.controller.UserController - POST /users/login - email='admin2@gmail.com'
+2026-10-28 14:18:23.557 [] INFO  c.c.c.controller.UserController - Login successful for email='admin2@gmail.com'
+2026-10-28 14:18:23.557 [] INFO  c.c.c.services.TokenService - Generating token for login='admin2@gmail.com'
+2026-10-28 14:18:44.429 [] INFO  c.c.c.controller.CategoryController - GET /categories
+2026-10-28 14:18:44.429 [] INFO  c.c.c.services.CategoryService - Listing categories, page=0, size=7
+2026-10-28 14:18:44.465 [] INFO  c.c.c.services.CategoryService - Returning 7 categorie(s) out of 7 total
+2026-10-28 14:18:58.553 [] INFO  c.c.c.controller.CategoryController - GET /categories
+2026-10-28 14:18:58.553 [] INFO  c.c.c.services.CategoryService - Listing categories, page=0, size=4
+2026-10-28 14:18:58.558 [] INFO  c.c.c.services.CategoryService - Returning 4 categorie(s) out of 7 total
+2026-10-28 14:19:17.672 [] INFO  c.c.c.controller.CategoryController - GET /categories
+2026-10-28 14:19:17.672 [] INFO  c.c.c.services.CategoryService - Listing categories, page=1, size=3
+2026-10-28 14:19:17.678 [] INFO  c.c.c.services.CategoryService - Returning 3 categorie(s) out of 7 total
+2026-10-28 14:20:21.306 [] WARN  c.c.c.services.TokenService - Token validation failed: The Token has expired on 2026-10-27T23:12:54Z.
+2026-10-28 14:21:29.419 [] INFO  c.c.c.controller.UserController - POST /users/login - email='belga@gmail.com'
+2026-10-28 14:21:29.492 [] INFO  c.c.c.controller.UserController - Login successful for email='belga@gmail.com'
+2026-10-28 14:21:29.492 [] INFO  c.c.c.services.TokenService - Generating token for login='belga@gmail.com'
+2026-10-28 14:21:50.406 [] INFO  c.c.c.controller.LaunchController - GET /launchs/balance
+2026-10-28 14:21:50.407 [] INFO  c.c.c.services.LaunchService - Calculating balance for user id=4
+2026-10-28 14:22:52.756 [] INFO  o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-10-28 14:22:52.759 [] INFO  o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-10-28 14:22:52.762 [] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28 14:22:52.764 [] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-10-28 14:22:52.766 [] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
