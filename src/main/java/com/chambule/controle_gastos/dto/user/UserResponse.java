@@ -19,4 +19,5 @@ public class UserResponse {
         this.email = user.getLogin();
         this.creationDate = user.getCreationDate();
     }
+
 }

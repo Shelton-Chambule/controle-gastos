@@ -22,7 +22,7 @@ public class Category {
     @Column(name = "category_Id")
     private Long id;
 
-    @Column(name = "name_category",nullable = false)
+    @Column(name = "name_category",nullable = false, unique = true)
     private String nameCategory;
 
     @Enumerated(EnumType.STRING)
